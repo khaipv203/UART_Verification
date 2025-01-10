@@ -1,7 +1,7 @@
 `include "uvm_macros.svh"
 import uvm_pkg::*;
 
-typedef enum bit [1:0]   {TX, RX, FULL_DUPLEX} oprn_mode;
+//typedef enum bit [1:0]   {TX, RX, FULL_DUPLEX} oprn_mode;
 
 class base_seq_item extends uvm_sequence_item;
     
@@ -24,7 +24,7 @@ class base_seq_item extends uvm_sequence_item;
     logic [11:0]                  tx_frame_data;
     logic                         parity_error;
     logic                         parity_bit; //For checking parity error
-    oprn_mode                     op;
+    //oprn_mode                     op;
 
   // Khai báo các object trong base sequence item
     `uvm_object_utils_begin(base_seq_item)
@@ -46,7 +46,7 @@ class base_seq_item extends uvm_sequence_item;
         `uvm_field_int(rx_data,UVM_ALL_ON)
         `uvm_field_int(parity_error,UVM_ALL_ON)
         `uvm_field_int(parity_bit,UVM_ALL_ON)
-        `uvm_field_enum(oprn_mode, op, UVM_DEFAULT)
+        //`uvm_field_enum(oprn_mode, op, UVM_DEFAULT)
     `uvm_object_utils_end
 
     function new(input string name="UART_SEQ_ITEM");
@@ -54,20 +54,20 @@ class base_seq_item extends uvm_sequence_item;
     endfunction
        
   // constraint các data được random
-  // constraint cts_n_c {soft cts_n == 1;} //Default: Don`t transmit anything, override to transmit
-  // constraint start_tx_c {soft start_tx == 0;} //Default: Don`t transmit anything, override to transmit
+  constraint cts_n_c {soft cts_n == 1;} //Default: Don`t transmit anything, override to transmit
+  constraint start_tx_c {soft start_tx == 0;} //Default: Don`t transmit anything, override to transmit
   constraint rst_n_c {soft rst_n == 1;} // soft constraint to overide when ever need to reset
-  constraint oprn_mode_c
-  {
-    if(op == TX){
-      start_tx == 1;
-      cts_n == 0;
-    }
-    else if(op == RX){
-      start_tx == 0;
-    }
-    else{
-      start_tx == 1;
-    }
-  }
+  // constraint oprn_mode_c
+  // {
+  //   if(op == TX){
+  //     start_tx == 1;
+  //     cts_n == 0;
+  //   }
+  //   else if(op == RX){
+  //     start_tx == 0;
+  //   }
+  //   else{
+  //     start_tx == 1;
+  //   }
+  // }
 endclass : base_seq_item

@@ -6,13 +6,13 @@ class base_env extends uvm_env;
   `uvm_component_utils(base_env)
 
   // declare child component handle
-  uart_virtual_sequencer vseqr;
+  uart_virtual_sequencer uart_vseqr;
   tx_agent tx_agt;
-  base_agent1 base_agt1;
-  fifo_scoreboard fifo_sb;
+  rx_agent rx_agt;
+  uart_scoreboard uart_sb;
   
   // declare virtual interface handle
-  virtual base_intf base_vif;
+  virtual uart_if vif;
 
   // constructor
   function new(input string name="BASE_ENV", uvm_component parent=null);
@@ -24,13 +24,13 @@ class base_env extends uvm_env;
     `uvm_info(get_full_name(),{"Starting Build phase for ",get_type_name()}, UVM_LOW)
     super.build_phase(phase);
     // check config virtual interface
-    if(!uvm_config_db#(virtual base_intf)::get(this,"","base_intf",base_vif))
+    if(!uvm_config_db#(virtual uart_if)::get(this,"","uart_if",vif))
         `uvm_fatal(get_type_name(),"BASE_ENV VIF Configuration failure!")
     // instance components
-    base_agt   = base_agent::type_id::create("base_agt",this);
-    base_agt1  = base_agent1::type_id::create("base_agt1",this);
-    fifo_sb    = fifo_scoreboard::type_id::create("fifo_sb",this);
-    vseqr      = fifo_virtual_sequencer::type_id::create("vseqr",this);
+    tx_agt     = tx_agent::type_id::create("tx_agt",this);
+    rx_agt     = rx_agent::type_id::create("rx_agt",this);
+    uart_sb    = uart_scoreboard::type_id::create("uart_sb",this);
+    uart_vseqr = uart_virtual_sequencer::type_id::create("uart_vseqr",this);
   endfunction
 
   // connect handles of local sequencers to virtual sequencer
@@ -38,11 +38,11 @@ class base_env extends uvm_env;
     `uvm_info(get_full_name(),{"Starting Connect phase for ",get_type_name()}, UVM_LOW)
     super.connect_phase(phase);
     // connect virtual sequencer to sequencer in agent 
-    vseqr.base_seqr = base_agt.base_seqr;
-    vseqr.base_seqr1 = base_agt1.base_seqr1;
+    uart_vseqr.tx_seqr = tx_agt.tx_seqr;
+    uart_vseqr.rx_seqr = rx_agt.rx_seqr;
     // connect monitor port to scoreboard
-    base_agt.base_mon.mon_wr_ap.connect(fifo_sb.wr2sb_port);
-    base_agt1.base_mon1.mon_rd_ap.connect(fifo_sb.rd2sb_port);
+    tx_agt.tx.tx_mon_analysis_port.connect(uart_sb.tx2sb_port);
+    rx_agt.rx_mon.rx_mon_analysis_port.connect(uart_sb.rx2sb_port);
   endfunction
     
-endclass : base_env
+endclass

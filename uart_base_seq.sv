@@ -41,7 +41,7 @@ class tx8_stop1_np extends uart_base_seq;
     virtual task body();
         seq = base_seq_item::type_id::create("seq");
         start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b0; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
+      assert(seq.randomize() with {tx_data == 8'hF; data_bit_num == 2'b11; stop_bit_num == 1'b0; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
         finish_item(seq);
     endtask
 endclass

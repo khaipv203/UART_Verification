@@ -47,7 +47,7 @@ localparam cnt_clk = 50000000/(115200*16);
   // instance sequence item and get item from VIF, sample covergroup
     virtual task run_phase(uvm_phase phase);
         super.run_phase(phase);
-        `uvm_info(get_full_name(),{"Starting Run phase for ",get_type_name()}, UVM_MEDIUM)
+      `uvm_info(get_full_name(),{"Starting Run phase for ",get_type_name()}, UVM_LOW)
         forever begin
         // instance sequence item to hold value get from VIF and send to scoreboard
         base_seq_item mon_seq = base_seq_item::type_id::create("mon_seq");
@@ -72,7 +72,7 @@ localparam cnt_clk = 50000000/(115200*16);
               mon_seq.tx_frame_data = {vif.tx, mon_seq.tx_frame_data[10:1]};
             end
 
-            `uvm_info(get_type_name(),$sformatf("TX_MONITOR write item: %s",mon_seq.sprint()),UVM_MEDIUM)
+          `uvm_info(get_type_name(),$sformatf("TX_MONITOR write item: %s",mon_seq.sprint()),UVM_LOW)
             // increase write seq counter
             // write_cnt++;
             // `uvm_info(get_type_name(),$sformatf("TX_MONITOR write items collected : %0d ",write_cnt),UVM_MEDIUM);
@@ -84,6 +84,7 @@ localparam cnt_clk = 50000000/(115200*16);
         end
       // send seq item to scoreboard through port
       // in write task must have condition when to accept data_in
+          @(posedge vif.tx_done);
         tx_mon_analysis_port.write(mon_seq);
     end
   endtask

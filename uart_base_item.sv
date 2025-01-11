@@ -1,5 +1,5 @@
-`include "uvm_macros.svh"
-import uvm_pkg::*;
+// `include "uvm_macros.svh"
+// import uvm_pkg::*;
 
 //typedef enum bit [1:0]   {TX, RX, FULL_DUPLEX} oprn_mode;
 
@@ -49,7 +49,7 @@ class base_seq_item extends uvm_sequence_item;
         //`uvm_field_enum(oprn_mode, op, UVM_DEFAULT)
     `uvm_object_utils_end
 
-    function new(input string name="UART_SEQ_ITEM");
+  function new(input string name="BASE_SEQ_ITEM");
        super.new(name);
     endfunction
        

@@ -1,5 +1,5 @@
-`include "uvm_macros.svh"
-import uvm_pkg::*;
+// `include "uvm_macros.svh"
+// import uvm_pkg::*;
 class base_env extends uvm_env;
 
   // register with factory
@@ -41,7 +41,7 @@ class base_env extends uvm_env;
     uart_vseqr.tx_seqr = tx_agt.tx_seqr;
     uart_vseqr.rx_seqr = rx_agt.rx_seqr;
     // connect monitor port to scoreboard
-    tx_agt.tx.tx_mon_analysis_port.connect(uart_sb.tx2sb_port);
+    tx_agt.tx_mon.tx_mon_analysis_port.connect(uart_sb.tx2sb_port);
     rx_agt.rx_mon.rx_mon_analysis_port.connect(uart_sb.rx2sb_port);
   endfunction
     

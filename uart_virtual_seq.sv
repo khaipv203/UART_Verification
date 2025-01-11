@@ -66,7 +66,7 @@ class simplex_tx extends uart_virtual_seq;
     
     `uvm_info(get_full_name(),{"Fifth started : ",get_type_name()},UVM_LOW)
     // single read
-    `uvm_do_on(tx_5, p_sequencer.base_seqr1);
+    `uvm_do_on(tx_5, p_sequencer.tx_seqr);
     
     #30ns;  // Wait for sequence ended
     `uvm_info(get_full_name(),{"Sequence ended : ",get_type_name()},UVM_LOW)
@@ -115,7 +115,7 @@ class reset_n_seq extends uart_virtual_seq;
     
     `uvm_info(get_full_name(),{"Fifth started : ",get_type_name()},UVM_LOW)
     // single read
-    `uvm_do_on(tx_5, p_sequencer.base_seqr1);
+      `uvm_do_on(tx_5, p_sequencer.tx_seqr);
     
     #30ns;  // Wait for sequence ended
     `uvm_info(get_full_name(),{"Sequence ended : ",get_type_name()},UVM_LOW)

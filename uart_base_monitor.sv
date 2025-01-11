@@ -1,11 +1,11 @@
-`include "uvm_macros.svh"
-import uvm_pkg::*;
+// `include "uvm_macros.svh"
+// import uvm_pkg::*;
 
 class tx_monitor extends uvm_monitor;
 
 localparam cnt_clk = 50000000/(115200*16);
   // register with factory
-  `uvm_component_utils(base_monitor)
+  `uvm_component_utils(tx_monitor)
 
   // declare virtual interface handle
   virtual uart_if vif;
@@ -69,7 +69,7 @@ localparam cnt_clk = 50000000/(115200*16);
             mon_seq.tx_frame_data = 'b0;
             while(!vif.tx_done) begin
               repeat (cnt_clk) @(posedge vif.clk);
-              mon_seq.tx_frame_data = {vif.tx, tx_frame_data[10:1]};
+              mon_seq.tx_frame_data = {vif.tx, mon_seq.tx_frame_data[10:1]};
             end
 
             `uvm_info(get_type_name(),$sformatf("TX_MONITOR write item: %s",mon_seq.sprint()),UVM_MEDIUM)
@@ -129,7 +129,7 @@ class rx_monitor extends uvm_monitor;
   // constructor instance analysis port and covergroup
   function new(input string name="rx_monitor", uvm_component parent=null);
     super.new(name,parent);
-    mon_rd_ap = new("rx_mon_analysis_port", this);
+    rx_mon_analysis_port = new("rx_mon_analysis_port", this);
     // data_out_covergroup = new;
     // rd_covergroup = new;
     // status_covergroup1 = new;
@@ -162,7 +162,7 @@ class rx_monitor extends uvm_monitor;
         @(vif.rx_done)
         mon_seq.rx_data = vif.rx_data;
         mon_seq.parity_error = vif.parity_error;
-        mon_seq.parity_bit = parity_bit
+        mon_seq.parity_bit = vif.parity_bit;
         `uvm_info(get_type_name(),$sformatf("RX_MONITOR read item: %s",mon_seq.sprint()),UVM_MEDIUM)
         // $display("[%0t] empty = %0d",$time,vif.fifo_empty); // for debug
         // increase counter for read seq

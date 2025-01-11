@@ -1,5 +1,5 @@
-`include "uvm_macros.svh"
-import uvm_pkg::*;
+// `include "uvm_macros.svh"
+// import uvm_pkg::*;
     
     interface uart_if (input bit clk);
     logic                    rst_n;
@@ -17,7 +17,7 @@ import uvm_pkg::*;
     logic                    tx_done;
     logic [7:0]              rx_data;
     logic                    parity_error;
-    logic                    parity_bit //Virtual interface for checking parity error
+    logic                    parity_bit; //Virtual interface for checking parity error
 
 
     //Define assertion

@@ -129,7 +129,7 @@ class simplex_tx_test extends base_test;
       // raise objection
       phase.raise_objection(this, {"Sequence started : ",get_name()});
       // start sequence
-      full_seq.start(uart_env.vseqr);
+      splx_tx_test.start(uart_env.uart_vseqr);
       #10ns;	// delay one more clock edge to make sure sequence ended
       // drob objection
       phase.drop_objection(this, {"Sequence ended : ",get_name()} );

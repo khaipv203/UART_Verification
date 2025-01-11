@@ -1,5 +1,5 @@
-`include "uvm_macros.svh"
-import uvm_pkg::*;
+// `include "uvm_macros.svh"
+// import uvm_pkg::*;
 
 //TX Sequencer Claas
 class tx_sequencer extends uvm_sequencer#(base_seq_item);

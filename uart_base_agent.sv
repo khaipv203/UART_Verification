@@ -1,5 +1,5 @@
-`include "uvm_macros.svh"
-import uvm_pkg::*;
+// `include "uvm_macros.svh"
+// import uvm_pkg::*;
 class tx_agent extends uvm_agent;
 
   // declare child component handle 
@@ -94,7 +94,7 @@ class rx_agent extends uvm_agent;
     super.connect_phase(phase);
     // if agent is active, connect sequencer port to driver port
     if(is_active == UVM_ACTIVE) begin
-       rx_drv.seq_item_port.connect(tx_seqr.seq_item_export);
+      rx_drv.seq_item_port.connect(rx_seqr.seq_item_export);
     end
   endfunction
     

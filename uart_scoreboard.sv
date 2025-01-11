@@ -1,5 +1,5 @@
-`include "uvm_macros.svh"
-import uvm_pkg::*;
+// `include "uvm_macros.svh"
+// import uvm_pkg::*;
 class uart_scoreboard extends uvm_scoreboard;
   
   // register with factory
@@ -33,13 +33,13 @@ class uart_scoreboard extends uvm_scoreboard;
     `uvm_info(get_type_name(),"Receive Seq From Monitor Write to Scoreboard",UVM_MEDIUM)
     `uvm_info(get_type_name(),$sformatf("Receive write seq: %s",tx_seq.sprint()),UVM_MEDIUM)
     if(tx_seq.rst_n) begin
-      golden_data_frame = `b0;
+      golden_data_frame = 'b0;
       golden_data_frame[0] = 0;
         case (tx_seq.data_bit_num)
           2'b00: begin
             golden_data_frame[5:1] = tx_seq.tx_data[4:0];
             if(tx_seq.parity_en) begin
-              if(parity_type) golden_data_frame[6] = ^(tx_seq.tx_data[4:0]);
+              if(tx_seq.parity_type) golden_data_frame[6] = ^(tx_seq.tx_data[4:0]);
               else golden_data_frame[6] = ~^(tx_seq.tx_data[4:0]);
               if(tx_seq.stop_bit_num) golden_data_frame[7] = 1'b1;
               else golden_data_frame[8:7] = 2'b11;
@@ -50,9 +50,9 @@ class uart_scoreboard extends uvm_scoreboard;
             end
           end 
           2'b01: begin
-            golden_data_frame[6:1] != tx_seq.tx_data[5:0];
+            golden_data_frame[6:1] = tx_seq.tx_data[5:0];
             if(tx_seq.parity_en) begin
-              if(parity_type) golden_data_frame[7] = ^(tx_seq.tx_data[5:0]);
+              if(tx_seq.parity_type) golden_data_frame[7] = ^(tx_seq.tx_data[5:0]);
               else golden_data_frame[7] = ~^(tx_seq.tx_data[5:0]);
               if(tx_seq.stop_bit_num) golden_data_frame[8] = 1'b1;
               else golden_data_frame[9:8] = 2'b11;
@@ -63,9 +63,9 @@ class uart_scoreboard extends uvm_scoreboard;
             end
           end
           2'b10: begin
-            golden_data_frame[7:1] != tx_seq.tx_data[6:0];
+            golden_data_frame[7:1] = tx_seq.tx_data[6:0];
             if(tx_seq.parity_en) begin
-              if(parity_type) golden_data_frame[8] = ^(tx_seq.tx_data[6:0]);
+              if(tx_seq.parity_type) golden_data_frame[8] = ^(tx_seq.tx_data[6:0]);
               else golden_data_frame[8] = ~^(tx_seq.tx_data[6:0]);
               if(tx_seq.stop_bit_num) golden_data_frame[9] = 1'b1;
               else golden_data_frame[10:9] = 2'b11;
@@ -76,9 +76,9 @@ class uart_scoreboard extends uvm_scoreboard;
             end
           end
           2'b01: begin
-            golden_data_frame[8:1] != tx_seq.tx_data[7:0];
+            golden_data_frame[8:1] = tx_seq.tx_data[7:0];
             if(tx_seq.parity_en) begin
-              if(parity_type) golden_data_frame[9] = ^(tx_seq.tx_data[7:0]);
+              if(tx_seq.parity_type) golden_data_frame[9] = ^(tx_seq.tx_data[7:0]);
               else golden_data_frame[9] = ~^(tx_seq.tx_data[7:0]);
               if(tx_seq.stop_bit_num) golden_data_frame[10] = 1'b1;
               else golden_data_frame[11:10] = 2'b11;
@@ -110,7 +110,7 @@ class uart_scoreboard extends uvm_scoreboard;
     logic [7:0] gd_rx_data;
     logic gd_parity_error;
    `uvm_info(get_type_name(),"Receive Seq From Monitor Write to Scoreboard",UVM_MEDIUM)
-    `uvm_info(get_type_name(),$sformatf("Receive write seq: %s",tx_seq.sprint()),UVM_MEDIUM)
+    `uvm_info(get_type_name(),$sformatf("Receive write seq: %s",rx_seq.sprint()),UVM_MEDIUM)
     if(rx_seq.rst_n) begin
       gd_rx_data = 'b0;
       gd_parity_error = 'b0;

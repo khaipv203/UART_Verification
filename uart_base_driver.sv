@@ -1,5 +1,5 @@
-`include "uvm_macros.svh"
-import uvm_pkg::*;
+// `include "uvm_macros.svh"
+// import uvm_pkg::*;
 class tx_driver extends uvm_driver#(base_seq_item);
   // register driver with factory
   `uvm_component_utils(tx_driver)
@@ -48,7 +48,7 @@ class tx_driver extends uvm_driver#(base_seq_item);
       vif.stop_bit_num  = seq.stop_bit_num;
       vif.parity_en     = seq.parity_en;
       vif.parity_type   = seq.parity_type;
-      vif.start_tx      = seq.start_tx
+      vif.start_tx      = seq.start_tx;
     end
     // else if reset, send rst_n signal immediatelly
     else begin
@@ -125,28 +125,28 @@ class rx_driver extends uvm_driver#(base_seq_item);
     endtask
     
     task send_8_bit();
-        for(i = 0; i < 8; i=i+1) begin
+      for(int i = 0; i < 8; i=i+1) begin
             repeat (cnt_clk) @(posedge vif.clk);
             vif.rx = seq.rx_serial_data[i]; 
         end
     endtask
 
     task send_7_bit();
-        for(i = 0; i < 7; i=i+1) begin
+      for(int i = 0; i < 7; i=i+1) begin
             repeat (cnt_clk) @(posedge vif.clk);
             vif.rx = seq.rx_serial_data[i]; 
         end
     endtask
 
     task send_6_bit();
-        for(i = 0; i < 6; i=i+1) begin
+      for(int i = 0; i < 6; i=i+1) begin
             repeat (cnt_clk) @(posedge vif.clk);
             vif.rx = seq.rx_serial_data[i]; 
         end
     endtask
     
     task send_5_bit();
-        for(i = 0; i < 5; i=i+1) begin
+      for(int i = 0; i < 5; i=i+1) begin
             repeat (cnt_clk) @(posedge vif.clk);
             vif.rx = seq.rx_serial_data[i]; 
         end
@@ -158,7 +158,7 @@ class rx_driver extends uvm_driver#(base_seq_item);
             vif.rx = 1'b1;
         end
         else begin
-            for(i = 0; i < 2; i=i+1) begin
+          for(int i = 0; i < 2; i=i+1) begin
                 repeat (cnt_clk) @(posedge vif.clk);
                 vif.rx = 1'b1; 
             end

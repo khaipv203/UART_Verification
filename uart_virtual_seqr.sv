@@ -1,9 +1,9 @@
-`include "uvm_macros.svh"
-import uvm_pkg::*;
+// `include "uvm_macros.svh"
+// import uvm_pkg::*;
 
 class uart_virtual_sequencer extends uvm_sequencer;
   // register with uvm factory
-  `uvm_component_utils(fifo_virtual_sequencer)
+  `uvm_component_utils(uart_virtual_sequencer)
 
   // declare handle for base sequencer
   tx_sequencer tx_seqr;

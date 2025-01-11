@@ -1,5 +1,5 @@
-`include "uvm_macros.svh"
-import uvm_pkg::*;
+// `include "uvm_macros.svh"
+// import uvm_pkg::*;
 
 class uart_base_seq extends uvm_sequence#(base_seq_item);
     `uvm_object_utils(uart_base_seq)
@@ -58,7 +58,7 @@ class tx7_stop1_np extends uart_base_seq;
     virtual task body();
         seq = base_seq_item::type_id::create("seq");
         start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b10; stop_bit_num == 1'b0; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1});
+        assert(seq.randomize() with {data_bit_num == 2'b10; stop_bit_num == 1'b0; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
         finish_item(seq);
     endtask
 endclass
@@ -75,7 +75,7 @@ class tx6_stop1_np extends uart_base_seq;
     virtual task body();
         seq = base_seq_item::type_id::create("seq");
         start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b01; stop_bit_num == 1'b0; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1});
+        assert(seq.randomize() with {data_bit_num == 2'b01; stop_bit_num == 1'b0; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
         finish_item(seq);
     endtask
 endclass
@@ -92,7 +92,7 @@ class tx5_stop1_np extends uart_base_seq;
     virtual task body();
         seq = base_seq_item::type_id::create("seq");
         start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b00; stop_bit_num == 1'b0; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1});
+        assert(seq.randomize() with {data_bit_num == 2'b00; stop_bit_num == 1'b0; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
         finish_item(seq);
     endtask
 endclass
@@ -143,7 +143,7 @@ class tx8_stop1_even extends uart_base_seq;
     virtual task body();
         seq = base_seq_item::type_id::create("tx8_stop1_even");
         start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b0; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1 parity_type == 1'b0;});
+        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b0; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b0;});
         finish_item(seq);
     endtask
 endclass
@@ -160,7 +160,7 @@ class tx8_stop2_odd extends uart_base_seq;
     virtual task body();
         seq = base_seq_item::type_id::create("seq");
         start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b1; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1 parity_type == 1'b1});
+        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b1; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b1;});
         finish_item(seq);
     endtask
 endclass
@@ -177,7 +177,7 @@ class tx8_stop2_even extends uart_base_seq;
     virtual task body();
         seq = base_seq_item::type_id::create("seq");
         start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b1; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1 parity_type == 1'b0});
+        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b1; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b0;});
         finish_item(seq);
     endtask
 endclass
@@ -285,8 +285,8 @@ class rx8_stop1_odd extends uart_base_seq;
 endclass
 
 //Receive fixed length = 8, one stop bit and even parity
-class rx8_stop1_odd extends uart_base_seq;
-    `uvm_object_utils(rx8_stop1_odd)
+class rx8_stop1_even extends uart_base_seq;
+  `uvm_object_utils(rx8_stop1_even)
 
     base_seq_item seq;
     function new(input string name="rx8_stop1_even");

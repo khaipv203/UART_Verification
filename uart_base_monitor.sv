@@ -58,7 +58,8 @@ localparam cnt_clk = 50000000/(115200*16);
             mon_seq.tx = vif.tx;
             mon_seq.tx_done = vif.tx_done;
         // if no reset and there is write request, get signal and flag from VIF
-        if(vif.rst_n && !vif.tx_done) begin
+        if(vif.rst_n) begin
+          @(vif.start_tx);
             mon_seq.cts_n         = vif.cts_n;
             mon_seq.tx_data       = vif.tx_data;
             mon_seq.data_bit_num  = vif.data_bit_num;
@@ -67,12 +68,15 @@ localparam cnt_clk = 50000000/(115200*16);
             mon_seq.parity_type   = vif.parity_type;
 
             mon_seq.tx_frame_data = 'b0;
-            while(!vif.tx_done) begin
+//           while(vif.tx_done == 0) begin
+          repeat(11) begin
+            `uvm_info(get_type_name(),$sformatf("TX: %b",vif.tx),UVM_NONE)
               repeat (cnt_clk) @(posedge vif.clk);
-              mon_seq.tx_frame_data = {vif.tx, mon_seq.tx_frame_data[10:1]};
+            mon_seq.tx_frame_data = {vif.tx, mon_seq.tx_frame_data[10:1]};
+            //
             end
 
-          `uvm_info(get_type_name(),$sformatf("TX_MONITOR write item: %s",mon_seq.sprint()),UVM_LOW)
+          `uvm_info(get_type_name(),$sformatf("TX_MONITOR write item: %s",mon_seq.sprint()),UVM_NONE)
             // increase write seq counter
             // write_cnt++;
             // `uvm_info(get_type_name(),$sformatf("TX_MONITOR write items collected : %0d ",write_cnt),UVM_MEDIUM);
@@ -84,7 +88,7 @@ localparam cnt_clk = 50000000/(115200*16);
         end
       // send seq item to scoreboard through port
       // in write task must have condition when to accept data_in
-          @(posedge vif.tx_done);
+          //@(posedge vif.tx_done);
         tx_mon_analysis_port.write(mon_seq);
     end
   endtask

@@ -15,8 +15,8 @@ import uvm_pkg::*;
     `include "uart_env.sv"
     `include "uart_test.sv"
     `include "uart_interface.sv"
-	`include "uart.sv" 
-module uart_tb_top;
+	// `include "../../hdl/uart.sv" 
+module testbench;
   // declare clk signal
   bit clk;
   

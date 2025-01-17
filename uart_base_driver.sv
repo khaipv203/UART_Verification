@@ -30,9 +30,11 @@ class tx_driver extends uvm_driver#(base_seq_item);
       seq_item_port.get_next_item(seq);
       // drive seq item to VIF
       drive();
-      @(posedge vif.tx_done);
+      `uvm_info(get_type_name(), "Wait for TX_DONE", UVM_NONE)
       // send response to sequencer to indicate that its OK to send next sequence item
+      `uvm_info(get_type_name(), "TX_DONE", UVM_NONE)
       seq_item_port.item_done();
+      
     end
   endtask
 
@@ -52,6 +54,7 @@ class tx_driver extends uvm_driver#(base_seq_item);
       vif.start_tx		= 1'b0;
       repeat(2) @(posedge vif.clk);
       vif.start_tx      = seq.start_tx;
+      @(posedge vif.tx_done);
     end
     // else if reset, send rst_n signal immediatelly
     else begin

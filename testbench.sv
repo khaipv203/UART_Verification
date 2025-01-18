@@ -15,7 +15,7 @@ import uvm_pkg::*;
     `include "uart_env.sv"
     `include "uart_test.sv"
     `include "uart_interface.sv"
-	// `include "../../hdl/uart.sv" 
+	  `include "uart.sv" 
 module testbench;
   // declare clk signal
   bit clk;
@@ -32,7 +32,7 @@ module testbench;
         .cts_n(vif.cts_n), 
         .tx(vif.tx), 
         .rts_n(vif.rts_n),
-    .tx_data(vif.tx_data),
+        .tx_data(vif.tx_data),
         .data_bit_num(vif.data_bit_num),
         .stop_bit_num(vif.stop_bit_num), 
         .parity_en(vif.parity_en), 
@@ -61,9 +61,9 @@ module testbench;
   end
      
   //dump wave form file
-//   initial begin
-//     $dumpfile("uart_dump.vcd");
-//     $dumpvars(0,uart_dut);
-//   end
+  initial begin
+    $dumpfile("uart_dump.vcd");
+    $dumpvars(0,uart_dut);
+  end
   
 endmodule

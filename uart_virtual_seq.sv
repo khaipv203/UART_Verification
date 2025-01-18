@@ -73,7 +73,7 @@ class simplex_tx extends uart_virtual_seq;
   endtask
 endclass
 
-// Sequence check fifo reset
+
 class reset_n_seq extends uart_virtual_seq;
   
   // register with factory
@@ -122,4 +122,45 @@ class reset_n_seq extends uart_virtual_seq;
   endtask
 endclass
 
-// write full memsize
+class simplex_rx extends uart_virtual_seq;
+  
+  // register with factory
+  `uvm_object_utils(simplex_rx)
+
+  // set handle for sequence called in this sequence
+  reset_seq rst_n_seq;
+  rx8_stop1_np rx_8;
+  rx7_stop1_np rx_7;
+  rx6_stop1_np rx_6;
+  rx5_stop1_np rx_5;
+
+  // constructor
+  function new(input string name="POST_TEST_SEQUENCE");
+    super.new(name);
+  endfunction
+
+  // Execute the sequences one after another
+  virtual task body();
+    `uvm_info(get_full_name(),{"Sequence started : ",get_type_name()},UVM_LOW)
+    // write half to mem
+    `uvm_do_on(rst_n_seq, p_sequencer.rx_seqr);
+
+    `uvm_info(get_full_name(),{"First seq ",get_type_name()},UVM_LOW)
+    //do nothing
+    `uvm_do_on(rx_8, p_sequencer.rx_seqr);
+    `uvm_info(get_full_name(),{"Third started : ",get_type_name()},UVM_LOW)
+    // single write
+    `uvm_do_on(rx_7, p_sequencer.rx_seqr);
+
+    `uvm_info(get_full_name(),{"Fourth seq ",get_type_name()},UVM_LOW)
+    // do nothing
+    `uvm_do_on(rx_6, p_sequencer.rx_seqr);
+    
+    `uvm_info(get_full_name(),{"Fifth started : ",get_type_name()},UVM_LOW)
+    // single read
+    `uvm_do_on(rx_5, p_sequencer.rx_seqr);
+    
+    #30ns;  // Wait for sequence ended
+    `uvm_info(get_full_name(),{"Sequence ended : ",get_type_name()},UVM_LOW)
+  endtask
+endclass

@@ -164,6 +164,7 @@ class rx_monitor extends uvm_monitor;
         mon_seq.stop_bit_num  = vif.stop_bit_num;
         mon_seq.parity_en     = vif.parity_en;
         mon_seq.parity_type   = vif.parity_type;
+        mon_seq.rts_n         = vif.rts_n;
         @(vif.rx_done)
         mon_seq.rx_data = vif.rx_data;
         mon_seq.parity_error = vif.parity_error;

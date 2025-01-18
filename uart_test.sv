@@ -139,3 +139,43 @@ class simplex_tx_test extends base_test;
   endtask
 
 endclass
+
+class simplex_rx_test extends base_test;
+  
+  // register with factory
+  `uvm_component_utils(simplex_rx_test)
+
+  // declare handle for sequence used in test
+  simplex_rx splx_rx_test;
+  uvm_objection splx_rx_test_objection;
+
+  // constructor
+  function new(input string name="splx_rx_test", uvm_component parent=null);
+    super.new(name,parent);
+  endfunction
+
+  // set base sequence is overriden by high level sequence
+  function void build_phase(uvm_phase phase);
+    set_type_override_by_type(uart_base_seq::get_type(), simplex_rx::get_type());
+    super.build_phase(phase);
+  endfunction 
+
+  // run sequence test
+  task run_phase(uvm_phase phase);
+    `uvm_info(get_full_name(),{"Starting Run phase for ",get_type_name()}, UVM_LOW)
+    // instance sequence
+    splx_rx_test = simplex_rx::type_id::create("splx_rx_test");
+    if(phase != null) begin
+      // raise objection
+      phase.raise_objection(this, {"Sequence started : ",get_name()});
+      // start sequence
+      splx_rx_test.start(uart_env.uart_vseqr);
+      #10ns;	// delay one more clock edge to make sure sequence ended
+      // drop objection
+      phase.drop_objection(this, {"Sequence ended : ",get_name()});
+      splx_rx_test_objection = phase.get_objection();
+      //full_test_objection.set_drain_time(this, 800);
+    end
+  endtask
+
+endclass

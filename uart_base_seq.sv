@@ -194,7 +194,7 @@ class rx8_stop1_np extends uart_base_seq;
     virtual task body();
         seq = base_seq_item::type_id::create("seq");
         start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b0; parity_en == 1'b0;});
+        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b0; parity_en == 1'b0; rx_serial_data inside {[8'h00:8'hFF]};});  
         finish_item(seq);
     endtask
 endclass
@@ -211,7 +211,7 @@ class rx7_stop1_np extends uart_base_seq;
     virtual task body();
         seq = base_seq_item::type_id::create("seq");
         start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b10; stop_bit_num == 1'b0; parity_en == 1'b0;});
+        assert(seq.randomize() with {data_bit_num == 2'b10; stop_bit_num == 1'b0; parity_en == 1'b0; rx_serial_data inside {[8'h00:8'h7F]};});
         finish_item(seq);
     endtask
 endclass
@@ -228,7 +228,7 @@ class rx6_stop1_np extends uart_base_seq;
     virtual task body();
         seq = base_seq_item::type_id::create("seq");
         start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b01; stop_bit_num == 1'b0; parity_en == 1'b0;});
+        assert(seq.randomize() with {data_bit_num == 2'b01; stop_bit_num == 1'b0; parity_en == 1'b0; rx_serial_data inside {[8'h00:8'h3F]};});
         finish_item(seq);
     endtask
 endclass
@@ -245,7 +245,7 @@ class rx5_stop1_np extends uart_base_seq;
     virtual task body();
         seq = base_seq_item::type_id::create("seq");
         start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b00; stop_bit_num == 1'b0; parity_en == 1'b0;});
+        assert(seq.randomize() with {data_bit_num == 2'b00; stop_bit_num == 1'b0; parity_en == 1'b0; rx_serial_data inside {[8'h00:8'h1F]};});
         finish_item(seq);
     endtask
 endclass
@@ -262,7 +262,7 @@ class rx8_stop2_np extends uart_base_seq;
     virtual task body();
         seq = base_seq_item::type_id::create("seq");
         start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b1; parity_en == 1'b0;});
+        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b1; parity_en == 1'b0; rx_serial_data inside {[8'h00:8'hFF]};});
         finish_item(seq);
     endtask
 endclass

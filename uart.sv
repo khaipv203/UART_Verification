@@ -1,4 +1,3 @@
-
 module uart (clk,reset_n,rx,cts_n,tx,rts_n,tx_data,data_bit_num,stop_bit_num,parity_en,parity_type,start_tx,rx_data,tx_done,rx_done,parity_error);
 input   clk ;
 input   reset_n ;
@@ -57,13 +56,15 @@ logic  [1:0] Tpl_53 ;
 logic  [3:0] Tpl_54 ;
 logic  [1:0] Tpl_55 ;
 logic  [7:0] Tpl_56 ;
-wire   Tpl_57 ;
-wire   Tpl_58 ;
+logic   Tpl_57 ;
+logic   Tpl_58 ;
 wire   Tpl_59 ;
 wire   Tpl_60 ;
 wire   Tpl_61 ;
-logic  [4:0] Tpl_62 ;
-logic  [8:0] Tpl_63 ;
+wire   Tpl_62 ;
+wire   Tpl_63 ;
+logic  [4:0] Tpl_64 ;
+logic  [8:0] Tpl_65 ;
 
 
 assign Tpl_18 = clk;
@@ -92,10 +93,10 @@ assign rts_n = Tpl_46;
 assign rx_done = Tpl_47;
 assign parity_error = Tpl_48;
 
-assign Tpl_58 = clk;
-assign Tpl_59 = reset_n;
-assign clk_tx = Tpl_60;
-assign clk_rx = Tpl_61;
+assign Tpl_60 = clk;
+assign Tpl_61 = reset_n;
+assign clk_tx = Tpl_62;
+assign clk_rx = Tpl_63;
 
 always @(*)
 begin
@@ -235,7 +236,7 @@ end
 Tpl_28 = Tpl_22[Tpl_33];
 end
 2'b11: begin
-if (Tpl_25)
+if ((Tpl_25 && (Tpl_35 == 0)))
 begin
 Tpl_28 = (Tpl_26 ? (^Tpl_36) : (~^Tpl_36));
 end
@@ -251,21 +252,21 @@ always @( posedge Tpl_18 or negedge Tpl_19 )
 begin
 if ((~Tpl_19))
 begin
-Tpl_29 <= 1'b1;
+Tpl_29 <= 1;
 end
 else
 begin
-if (((Tpl_20 && (Tpl_30 == 2'b11)) && (Tpl_35 == Tpl_34)))
+if (Tpl_20)
 begin
-Tpl_29 <= 1'b1;
+if ((((Tpl_30 == 2'b11) && (Tpl_35 == Tpl_34)) || (Tpl_30 == 2'b00)))
+begin
+Tpl_29 <= 1;
 end
 else
-if ((Tpl_31 == 2'b00))
-begin
-Tpl_29 <= 1'b1;
+Tpl_29 <= 0;
 end
 else
-Tpl_29 <= 1'b0;
+Tpl_29 <= Tpl_29;
 end
 end
 
@@ -297,6 +298,12 @@ end
 always @(*)
 begin
 case (Tpl_49)
+2'b11: begin
+if ((!Tpl_40))
+Tpl_50 = 2'b00;
+else
+Tpl_50 = 2'b11;
+end
 2'b00: begin
 if ((Tpl_51 == 15))
 begin
@@ -316,12 +323,12 @@ end
 2'b10: begin
 if (((Tpl_51 == 15) && (Tpl_55 == Tpl_53)))
 begin
-Tpl_50 = 2'b00;
+Tpl_50 = 2'b11;
 end
 else
 Tpl_50 = 2'b10;
 end
-default: Tpl_50 = 2'b00;
+default: Tpl_50 = 2'b11;
 endcase
 end
 
@@ -339,16 +346,16 @@ else
 begin
 Tpl_49 <= Tpl_50;
 case (Tpl_49)
+2'b11: begin
+Tpl_51 <= 0;
+Tpl_58 <= 0;
+end
 2'b00: begin
 Tpl_54 <= 0;
 Tpl_55 <= 0;
 if (Tpl_39)
 begin
-if (((!Tpl_40) || (Tpl_51 != 0)))
-begin
 Tpl_51 <= (Tpl_51 + 1'b1);
-end
-else
 if ((Tpl_51 == 15))
 begin
 Tpl_51 <= 0;
@@ -365,6 +372,7 @@ if ((Tpl_51 == 8))
 begin
 Tpl_54 <= (Tpl_54 + 1);
 Tpl_56[Tpl_54] <= Tpl_40;
+Tpl_58 <= (Tpl_58 ^ Tpl_40);
 end
 else
 if ((Tpl_51 == 15))
@@ -400,15 +408,22 @@ end
 always @(*)
 begin
 case (Tpl_49)
+2'b11: begin
+Tpl_47 = 1;
+end
 2'b00: begin
-Tpl_47 = 0;
+Tpl_47 = 1;
 end
 2'b01: begin
 Tpl_47 = 0;
 end
 2'b10: begin
 Tpl_47 = ((Tpl_51 == 15) && (Tpl_55 == Tpl_53));
-Tpl_48 = Tpl_57;
+if (((Tpl_55 == 0) && Tpl_43))
+begin
+Tpl_57 = Tpl_40;
+end
+Tpl_48 = (Tpl_43 ? (Tpl_44 ? (Tpl_58 != Tpl_57) : ((~Tpl_58) != Tpl_57)) : 1'b0);
 end
 default: begin
 Tpl_47 = 0;
@@ -416,44 +431,43 @@ end
 endcase
 end
 
-assign Tpl_46 = Tpl_47;
+assign Tpl_46 = (~Tpl_47);
 assign Tpl_45 = Tpl_56;
-assign Tpl_57 = (Tpl_43 ? ((^Tpl_45) == Tpl_44) : 1'b0);
-assign Tpl_61 = (Tpl_62 == 0);
-assign Tpl_60 = (Tpl_63 == 0);
+assign Tpl_63 = (Tpl_64 == 0);
+assign Tpl_62 = (Tpl_65 == 0);
 
-always @( posedge Tpl_58 or negedge Tpl_59 )
+always @( posedge Tpl_60 or negedge Tpl_61 )
 begin
-if ((~Tpl_59))
+if ((~Tpl_61))
 begin
-Tpl_62 <= 0;
+Tpl_64 <= 0;
 end
 else
 begin
-if ((Tpl_62 == 27))
+if ((Tpl_64 == 27))
 begin
-Tpl_62 <= 0;
+Tpl_64 <= 0;
 end
 else
-Tpl_62 <= (Tpl_62 + 1);
+Tpl_64 <= (Tpl_64 + 1);
 end
 end
 
 
-always @( posedge Tpl_58 or negedge Tpl_59 )
+always @( posedge Tpl_60 or negedge Tpl_61 )
 begin
-if ((~Tpl_59))
+if ((~Tpl_61))
 begin
-Tpl_63 <= 0;
+Tpl_65 <= 0;
 end
 else
 begin
-if ((Tpl_63 == 434))
+if ((Tpl_65 == 434))
 begin
-Tpl_63 <= 0;
+Tpl_65 <= 0;
 end
 else
-Tpl_63 <= (Tpl_63 + 1);
+Tpl_65 <= (Tpl_65 + 1);
 end
 end
 

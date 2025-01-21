@@ -168,3 +168,61 @@ class simplex_rx extends uart_virtual_seq;
     `uvm_info(get_full_name(),{"Sequence ended : ",get_type_name()},UVM_LOW)
   endtask
 endclass
+
+class random_tx_seq extends uart_virtual_seq;
+    `uvm_object_utils(random_tx_seq)
+
+  // declare handle for sequence used in this high level sequence
+  reset_seq rst_n_seq;
+  tx5_rand tx5_r;
+  tx6_rand tx6_r;
+  tx7_rand tx7_r;
+  tx8_rand tx8_r;
+  tx_rand_np tx_np;
+  tx_rand_odd tx_odd;
+  tx_rand_even tx_even;
+  tx_rand_stop1 tx_stop_1;
+  tx_rand_stop2 tx_stop_2;
+
+  function new(input string name="RESET_TEST_SEQUENCE");
+    super.new(name);
+  endfunction
+
+  // Execute the sequences one after another
+    virtual task body();
+    `uvm_info(get_full_name(),{"Reset started : ",get_type_name()},UVM_LOW)
+    // write half to mem
+    `uvm_do_on(rst_n_seq, p_sequencer.tx_seqr);
+    repeat(50) begin
+    `uvm_info(get_full_name(),{"Tx5_r seq ",get_type_name()},UVM_LOW)
+    `uvm_do_on(tx5_r, p_sequencer.tx_seqr);
+    `uvm_info(get_full_name(),{"Tx6_r started : ",get_type_name()},UVM_LOW)
+    `uvm_do_on(tx6_r, p_sequencer.tx_seqr);
+
+    `uvm_info(get_full_name(),{"Tx7_r started : ",get_type_name()},UVM_LOW)
+    `uvm_do_on(tx7_r, p_sequencer.tx_seqr);
+
+    `uvm_info(get_full_name(),{"tx8_r seq ",get_type_name()},UVM_LOW)
+    // do nothing
+    `uvm_do_on(tx8_r, p_sequencer.tx_seqr);
+    
+    `uvm_info(get_full_name(),{"tx_odd started : ",get_type_name()},UVM_LOW)
+    // single read
+    `uvm_do_on(tx_odd, p_sequencer.tx_seqr);
+      `uvm_info(get_full_name(),{"tx_even started : ",get_type_name()},UVM_LOW)
+    // single read
+    `uvm_do_on(tx_even, p_sequencer.tx_seqr);
+      `uvm_info(get_full_name(),{"tx_stop_1 started : ",get_type_name()},UVM_LOW)
+    // single read
+      `uvm_do_on(tx_stop_1, p_sequencer.tx_seqr);
+      `uvm_info(get_full_name(),{"tx_stop_2 started : ",get_type_name()},UVM_LOW)
+    // single read
+      `uvm_do_on(tx_stop_2, p_sequencer.tx_seqr);
+
+    end
+   
+    
+    #30ns;  // Wait for sequence ended
+    `uvm_info(get_full_name(),{"Sequence ended : ",get_type_name()},UVM_LOW)
+  endtask
+endclass

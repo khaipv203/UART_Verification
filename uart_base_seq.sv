@@ -126,7 +126,7 @@ class tx8_stop1_odd extends uart_base_seq;
     virtual task body();
         seq = base_seq_item::type_id::create("seq");
         start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b0; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b1;});
+        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b0; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b0;});
         finish_item(seq);
     endtask
 endclass
@@ -143,7 +143,7 @@ class tx8_stop1_even extends uart_base_seq;
     virtual task body();
         seq = base_seq_item::type_id::create("tx8_stop1_even");
         start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b0; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b0;});
+        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b0; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b1;});
         finish_item(seq);
     endtask
 endclass
@@ -160,7 +160,7 @@ class tx8_stop2_odd extends uart_base_seq;
     virtual task body();
         seq = base_seq_item::type_id::create("seq");
         start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b1; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b1;});
+        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b1; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b0;});
         finish_item(seq);
     endtask
 endclass
@@ -177,7 +177,7 @@ class tx8_stop2_even extends uart_base_seq;
     virtual task body();
         seq = base_seq_item::type_id::create("seq");
         start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b1; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b0;});
+        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b1; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b1;});
         finish_item(seq);
     endtask
 endclass
@@ -313,7 +313,7 @@ class rx8_stop2_odd extends uart_base_seq;
     virtual task body();
         seq = base_seq_item::type_id::create("seq");
         start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b1; parity_en == 1'b1; parity_type == 1'b1;});
+        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b1; parity_en == 1'b1; parity_type == 1'b0;});
         finish_item(seq);
     endtask
 endclass
@@ -345,9 +345,151 @@ FULL-DUPLEX Test
 
 
 ////////////////////////////////////////////////
-/*
-SIMPLEX Test
-*/
+class tx8_rand extends uart_base_seq;
+    `uvm_object_utils(tx8_rand)
+
+    base_seq_item seq;
+    function new(input string name="tx8_rand");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+      assert(seq.randomize() with {data_bit_num == 2'b11; cts_n == 1'b0; start_tx == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+
+class tx7_rand extends uart_base_seq;
+    `uvm_object_utils(tx7_rand)
+
+    base_seq_item seq;
+    function new(input string name="tx7_rand");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+      assert(seq.randomize() with {data_bit_num == 2'b10; cts_n == 1'b0; start_tx == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+
+
+class tx6_rand extends uart_base_seq;
+    `uvm_object_utils(tx6_rand)
+
+    base_seq_item seq;
+    function new(input string name="tx6_rand");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+      assert(seq.randomize() with {data_bit_num == 2'b01; cts_n == 1'b0; start_tx == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+
+class tx5_rand extends uart_base_seq;
+    `uvm_object_utils(tx5_rand)
+
+    base_seq_item seq;
+    function new(input string name="tx6_rand");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+      assert(seq.randomize() with {data_bit_num == 2'b00; cts_n == 1'b0; start_tx == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+
+class tx_rand_np extends uart_base_seq;
+    `uvm_object_utils(tx_rand_np)
+
+    base_seq_item seq;
+    function new(input string name="tx_rand_np");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+      assert(seq.randomize() with {parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+
+class tx_rand_odd extends uart_base_seq;
+    `uvm_object_utils(tx_rand_odd)
+
+    base_seq_item seq;
+    function new(input string name="tx_rand_odd");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+      assert(seq.randomize() with {parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b0;});
+        finish_item(seq);
+    endtask
+endclass
+
+class tx_rand_even extends uart_base_seq;
+    `uvm_object_utils(tx_rand_even)
+
+    base_seq_item seq;
+    function new(input string name="tx_rand_even");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+      assert(seq.randomize() with {parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+
+
+class tx_rand_stop1 extends uart_base_seq;
+    `uvm_object_utils(tx_rand_stop1)
+
+    base_seq_item seq;
+    function new(input string name="tx_rand_stop1");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {stop_bit_num == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+
+class tx_rand_stop2 extends uart_base_seq;
+    `uvm_object_utils(tx_rand_stop2)
+
+    base_seq_item seq;
+    function new(input string name="tx_rand_stop2");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {stop_bit_num == 1'b1; cts_n == 1'b0; start_tx == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
 ////////////////////////////////////////////////
 
 

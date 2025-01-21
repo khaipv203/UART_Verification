@@ -37,7 +37,7 @@ class uart_scoreboard extends uvm_scoreboard;
       golden_data_frame[0] = 0;
         case (tx_seq.data_bit_num)
           2'b00: begin
-            `uvm_info(get_type_name(), "Get Data for Golden", UVM_NONE)
+            //`uvm_info(get_type_name(), "Get Data for Golden", UVM_NONE)
             golden_data_frame[5:1] = tx_seq.tx_data[4:0];
             if(tx_seq.parity_en) begin
               if(tx_seq.parity_type) golden_data_frame[6] = ^(tx_seq.tx_data[4:0]);
@@ -51,7 +51,7 @@ class uart_scoreboard extends uvm_scoreboard;
             end
           end 
           2'b01: begin
-            `uvm_info(get_type_name(), "Get Data for Golden", UVM_NONE)           
+            //`uvm_info(get_type_name(), "Get Data for Golden", UVM_NONE)           
             golden_data_frame[6:1] = tx_seq.tx_data[5:0];
             if(tx_seq.parity_en) begin
               if(tx_seq.parity_type) golden_data_frame[7] = ^(tx_seq.tx_data[5:0]);
@@ -65,7 +65,7 @@ class uart_scoreboard extends uvm_scoreboard;
             end
           end
           2'b10: begin
-            `uvm_info(get_type_name(), "Get Data for Golden", UVM_NONE)
+            //`uvm_info(get_type_name(), "Get Data for Golden", UVM_NONE)
             golden_data_frame[7:1] = tx_seq.tx_data[6:0];
             if(tx_seq.parity_en) begin
               if(tx_seq.parity_type) golden_data_frame[8] = ^(tx_seq.tx_data[6:0]);
@@ -79,7 +79,7 @@ class uart_scoreboard extends uvm_scoreboard;
             end
           end
           2'b11: begin
-            `uvm_info(get_type_name(), "Get Data for Golden", UVM_NONE)
+            //`uvm_info(get_type_name(), "Get Data for Golden", UVM_NONE)
             golden_data_frame[8:1] = tx_seq.tx_data[7:0];
             if(tx_seq.parity_en) begin
               if(tx_seq.parity_type) golden_data_frame[9] = ^(tx_seq.tx_data[7:0]);
@@ -110,9 +110,10 @@ class uart_scoreboard extends uvm_scoreboard;
   task check_for_result(input base_seq_item tx_seq_check, input logic [11:0] golden_data, input logic [11:0] DUT_data);
     if(tx_seq_check.data_bit_num == 2'b11 && tx_seq_check.parity_en == 1'b1 && tx_seq_check.stop_bit_num == 1'b1) begin
       if(golden_data == DUT_data)
-    `uvm_info(get_type_name(),$sformatf("TX SEQUENCE PASS: GOLDEN=%0B, DUT=%0B", golden_data, DUT_data),UVM_LOW)
+   `uvm_info(get_type_name(),$sformatf("TX SEQUENCE PASS: GOLDEN=%0B, DUT=%0B", golden_data, DUT_data),UVM_LOW)
       else
-    `uvm_error(get_type_name(),$sformatf("TX ERROR: GOLDEN=%0B, DUT=%0B", golden_data, DUT_data))
+    // `uvm_error(get_type_name(),$sformatf("TX ERROR: GOLDEN=%0B, DUT=%0B", golden_data, DUT_data))
+      `uvm_error(get_type_name(),$sformatf("TX_ERROR GOLDEN=%0B, DUT=%0B, write item: %s", golden_data, DUT_data ,tx_seq_check.sprint()))
     end
     else if //Check for frame 11 bit
     (
@@ -123,7 +124,7 @@ class uart_scoreboard extends uvm_scoreboard;
       if(golden_data == DUT_data[11:1])
     `uvm_info(get_type_name(),$sformatf("TX SEQUENCE PASS: GOLDEN=%0B, DUT=%0B", golden_data[10:0], DUT_data[11:1]),UVM_LOW)
       else
-    `uvm_error(get_type_name(),$sformatf("TX ERROR: GOLDEN=%0B, DUT=%0B", golden_data[10:0], DUT_data[11:1]))
+    `uvm_error(get_type_name(),$sformatf("TX_ERROR, write item: %s", golden_data[10:0], DUT_data[11:1],tx_seq_check.sprint()))
     end
     else if //Check for 10 bit
     (
@@ -133,9 +134,9 @@ class uart_scoreboard extends uvm_scoreboard;
     (tx_seq_check.data_bit_num == 2'b01 && tx_seq_check.parity_en == 1'b1 && tx_seq_check.stop_bit_num == 1'b1) 
     ) begin
       if(golden_data == DUT_data[11:2])
-    `uvm_info(get_type_name(),$sformatf("TX SEQUENCE PASS: GOLDEN=%0B, DUT=%0B", golden_data[9:0], DUT_data[9:0]),UVM_LOW)
+    `uvm_info(get_type_name(),$sformatf("TX SEQUENCE PASS: GOLDEN=%0B, DUT=%0B", golden_data[9:0], DUT_data[11:2]),UVM_LOW)
       else
-    `uvm_error(get_type_name(),$sformatf("TX ERROR: GOLDEN=%0B, DUT=%0B", golden_data[9:0], DUT_data[11:2]))
+    `uvm_error(get_type_name(),$sformatf("TX_ERROR GOLDEN=%0B, DUT=%0B, write item: %s", golden_data[9:0], DUT_data[11:2],tx_seq_check.sprint()))
     end
      else if //Check for 9 bit
     (
@@ -147,7 +148,7 @@ class uart_scoreboard extends uvm_scoreboard;
       if(golden_data == DUT_data[11:3])
     `uvm_info(get_type_name(),$sformatf("TX SEQUENCE PASS"),UVM_LOW)
       else
-    `uvm_error(get_type_name(),$sformatf("TX ERROR: GOLDEN=%0B, DUT=%0B", golden_data[8:0], DUT_data[11:3]))
+    `uvm_error(get_type_name(),$sformatf("TX_ERROR GOLDEN=%0B, DUT=%0B, write item: %s", golden_data[8:0], DUT_data[11:3],tx_seq_check.sprint()))
     end
     else if //Check for frame 8 bit
     (
@@ -156,15 +157,15 @@ class uart_scoreboard extends uvm_scoreboard;
       (tx_seq_check.data_bit_num == 2'b00 && tx_seq_check.parity_en == 1'b0 && tx_seq_check.stop_bit_num == 1'b1)
     ) begin
       if(golden_data == DUT_data[11:4])
-    `uvm_info(get_type_name(),$sformatf("TX SEQUENCE PASS"),UVM_LOW)
+   `uvm_info(get_type_name(),$sformatf("TX SEQUENCE PASS"),UVM_LOW)
       else
-    `uvm_error(get_type_name(),$sformatf("TX ERROR: GOLDEN=%0B, DUT=%0B", golden_data[7:0], DUT_data[11:4]))
+    `uvm_error(get_type_name(),$sformatf("TX_ERROR GOLDEN=%0B, DUT=%0B, write item: %s", golden_data[7:0], DUT_data[11:4],tx_seq_check.sprint()))
     end
     else begin
       if(golden_data == DUT_data[11:5])
     `uvm_info(get_type_name(),$sformatf("TX SEQUENCE PASS"),UVM_LOW)
       else
-    `uvm_error(get_type_name(),$sformatf("TX ERROR: GOLDEN=%0B, DUT=%0B", golden_data[6:0], DUT_data[11:5]))
+    `uvm_error(get_type_name(),$sformatf("TX_ERROR GOLDEN=%0B, DUT=%0B, write item: %s", golden_data[6:0], DUT_data[11:5],tx_seq_check.sprint()))
     end
   endtask 
   // overwrite write function with tag monitor read

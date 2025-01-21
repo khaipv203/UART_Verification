@@ -24,7 +24,7 @@ class tx_driver extends uvm_driver#(base_seq_item);
   // run phase to get sequence item and drive it to VIF
   virtual task run_phase(uvm_phase phase);
     super.run_phase(phase);
-    `uvm_info(get_full_name(),{"Starting TX_DRIVER Run phase for ",get_type_name()}, UVM_LOW)
+    // `uvm_info(get_full_name(),{"Starting TX_DRIVER Run phase for ",get_type_name()}, UVM_LOW)
     forever begin
       // get sequence item from sequencer port
       seq_item_port.get_next_item(seq);
@@ -38,7 +38,7 @@ class tx_driver extends uvm_driver#(base_seq_item);
 
   // task drive sequence item to VIF
  task drive();
-    `uvm_info(get_type_name(),$sformatf("TX_DRIVER write item: %s",seq.sprint()),UVM_MEDIUM)
+    // `uvm_info(get_type_name(),$sformatf("TX_DRIVER write item: %s",seq.sprint()),UVM_MEDIUM)
     // if no reset, send item at negedge clk
     if(seq.rst_n) begin
       @(negedge vif.clk)
@@ -52,7 +52,7 @@ class tx_driver extends uvm_driver#(base_seq_item);
       vif.start_tx		  = 1'b0;
       repeat(2) @(posedge vif.clk);
       vif.start_tx      = seq.start_tx;
-      `uvm_info(get_type_name(),"Send to DUT", UVM_NONE)
+      // `uvm_info(get_type_name(),"Send to DUT", UVM_NONE)
       @(posedge vif.tx_done);
     end
     // else if reset, send rst_n signal immediatelly

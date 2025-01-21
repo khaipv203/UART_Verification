@@ -30,16 +30,14 @@ class tx_driver extends uvm_driver#(base_seq_item);
       seq_item_port.get_next_item(seq);
       // drive seq item to VIF
       drive();
-      `uvm_info(get_type_name(), "Wait for TX_DONE", UVM_NONE)
       // send response to sequencer to indicate that its OK to send next sequence item
-      `uvm_info(get_type_name(), "TX_DONE", UVM_NONE)
       seq_item_port.item_done();
       
     end
   endtask
 
   // task drive sequence item to VIF
-  task drive();
+ task drive();
     `uvm_info(get_type_name(),$sformatf("TX_DRIVER write item: %s",seq.sprint()),UVM_MEDIUM)
     // if no reset, send item at negedge clk
     if(seq.rst_n) begin
@@ -54,6 +52,7 @@ class tx_driver extends uvm_driver#(base_seq_item);
       vif.start_tx		  = 1'b0;
       repeat(2) @(posedge vif.clk);
       vif.start_tx      = seq.start_tx;
+      `uvm_info(get_type_name(),"Send to DUT", UVM_NONE)
       @(posedge vif.tx_done);
     end
     // else if reset, send rst_n signal immediatelly
@@ -61,7 +60,6 @@ class tx_driver extends uvm_driver#(base_seq_item);
       vif.rst_n = seq.rst_n;
     end
   endtask
-
 endclass
 
 

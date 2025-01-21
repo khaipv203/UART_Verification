@@ -167,7 +167,7 @@ endclass
 
 //Transmit fixed length = 8, two stop bit and even parity
 class tx8_stop2_even extends uart_base_seq;
-    `uvm_object_utils(tx8_stop2_odd)
+    `uvm_object_utils(tx8_stop2_even)
 
     base_seq_item seq;
     function new(input string name="tx8_stop2_even");

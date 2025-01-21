@@ -3,7 +3,7 @@
 
 class tx_monitor extends uvm_monitor;
 
-localparam cnt_clk = 50000000/(115200*16);
+localparam cnt_clk = 50000000/(115200);
   // register with factory
   `uvm_component_utils(tx_monitor)
 
@@ -52,45 +52,99 @@ localparam cnt_clk = 50000000/(115200*16);
         // instance sequence item to hold value get from VIF and send to scoreboard
         base_seq_item mon_seq = base_seq_item::type_id::create("mon_seq");
 	    // get signal from VIF on posedge clk
-        @(posedge vif.clk)
+        @(posedge vif.clk);
         // put rst_n to base sequence send to scoreboard in order to check 
-            mon_seq.rst_n = vif.rst_n;
-            mon_seq.tx = vif.tx;
-            mon_seq.tx_done = vif.tx_done;
+          mon_seq.rst_n = vif.rst_n;
         // if no reset and there is write request, get signal and flag from VIF
-        if(vif.rst_n) begin
-          @(vif.start_tx);
+        `uvm_info(get_type_name(),"Start Monitor",UVM_NONE)
+    if(vif.rst_n) begin
+        `uvm_info(get_type_name(),"Start Monitor Non Reset",UVM_NONE)
+          @(posedge vif.start_tx);
+          `uvm_info(get_type_name(),"Start Monitor Non Reset",UVM_NONE)
             mon_seq.cts_n         = vif.cts_n;
             mon_seq.tx_data       = vif.tx_data;
             mon_seq.data_bit_num  = vif.data_bit_num;
             mon_seq.stop_bit_num  = vif.stop_bit_num;
             mon_seq.parity_en     = vif.parity_en;
             mon_seq.parity_type   = vif.parity_type;
-
             mon_seq.tx_frame_data = 'b0;
-//           while(vif.tx_done == 0) begin
-          repeat(11) begin
-            `uvm_info(get_type_name(),$sformatf("TX: %b",vif.tx),UVM_NONE)
-              repeat (cnt_clk) @(posedge vif.clk);
-            mon_seq.tx_frame_data = {vif.tx, mon_seq.tx_frame_data[10:1]};
-            //
-            end
+            `uvm_info(get_type_name(),"Get TX Config",UVM_NONE)
+            //@(negedge vif.tx_done);
+          // while(vif.tx_done == 0) begin
+          //     repeat (cnt_clk) @(posedge vif.clk)
+          //     mon_seq.tx_frame_data = {vif.tx, mon_seq.tx_frame_data[10:1]};
+          //     `uvm_info(get_type_name(),$sformatf("TX: %b",vif.tx),UVM_NONE)
+          //   end
+            // @(negedge vif.tx_done);
+            `uvm_info(get_type_name(),"Start Collecting Data",UVM_NONE)
+            //@(negedge vif.tx_done);
+            repeat (cnt_clk + 2) @(posedge vif.clk);
+            `uvm_info(get_type_name(),$sformatf("TX bit start: %b",vif.tx),UVM_NONE) 
+            mon_seq.tx_frame_data = {vif.tx, mon_seq.tx_frame_data[11:1]};
 
-          `uvm_info(get_type_name(),$sformatf("TX_MONITOR write item: %s",mon_seq.sprint()),UVM_NONE)
-            // increase write seq counter
-            // write_cnt++;
-            // `uvm_info(get_type_name(),$sformatf("TX_MONITOR write items collected : %0d ",write_cnt),UVM_MEDIUM);
-            // sample covergroups
-            // data_in_covergroup.sample();
-            // wr_covergroup.sample();
-            // status_covergroup.sample();
-            // cross_covergroup.sample();
+            case (vif.data_bit_num)
+              2'b00: begin
+                for(int i = 0; i<5; i++) begin
+                    repeat (cnt_clk + 2) @(posedge vif.clk);
+                  `uvm_info(get_type_name(),$sformatf("TX_data: %b",vif.tx),UVM_NONE)                  
+                  mon_seq.tx_frame_data = {vif.tx, mon_seq.tx_frame_data[11:1]};
+                end
+              end
+
+              2'b01: begin
+                for(int i = 0; i<6; i++) begin
+                    repeat (cnt_clk + 2) @(posedge vif.clk);
+                  `uvm_info(get_type_name(),$sformatf("TX_data: %b",vif.tx),UVM_NONE)
+                  mon_seq.tx_frame_data = {vif.tx, mon_seq.tx_frame_data[11:1]};                
+                end                
+              end 
+
+              2'b10: begin
+                for(int i = 0; i<7; i++) begin
+                    repeat (cnt_clk + 2) @(posedge vif.clk);
+                  `uvm_info(get_type_name(),$sformatf("TX_data: %b",vif.tx),UVM_NONE)
+                  mon_seq.tx_frame_data = {vif.tx, mon_seq.tx_frame_data[11:1]};
+                end                
+              end 
+
+              2'b11: begin
+                for(int i = 0; i<8; i++) begin
+                    repeat (cnt_clk + 2) @(posedge vif.clk);
+                  `uvm_info(get_type_name(),$sformatf("TX_data: %b",vif.tx),UVM_NONE)
+                  mon_seq.tx_frame_data = {vif.tx, mon_seq.tx_frame_data[11:1]};                 
+                end                
+              end  
+            endcase
+            if(vif.parity_en) begin
+                repeat (cnt_clk + 2) @(posedge vif.clk);
+                  `uvm_info(get_type_name(),$sformatf("TX_parity: %b",vif.tx),UVM_NONE)
+              mon_seq.tx_frame_data = {vif.tx, mon_seq.tx_frame_data[11:1]};                          
+            end
+            if(vif.stop_bit_num == 1'b0) begin
+                repeat (cnt_clk + 2) @(posedge vif.clk);
+                  `uvm_info(get_type_name(),$sformatf("TX_stopbit_1: %b",vif.tx),UVM_NONE)
+              mon_seq.tx_frame_data = {vif.tx, mon_seq.tx_frame_data[11:1]};  
+              mon_seq.tx_done = vif.tx_done;
+              `uvm_info(get_type_name(),$sformatf("TX_MONITOR write item: %s",mon_seq.sprint()),UVM_NONE) 
+              tx_mon_analysis_port.write(mon_seq); 
+            end
+            else begin
+              for(int i = 0; i<2; i++) begin
+                  repeat (cnt_clk + 2) @(posedge vif.clk);
+                  `uvm_info(get_type_name(),$sformatf("TX_stopbit_2: %b",vif.tx),UVM_NONE)
+                mon_seq.tx_frame_data = {vif.tx, mon_seq.tx_frame_data[11:1]}; 
+              end  
+              mon_seq.tx_done = vif.tx_done;
+              `uvm_info(get_type_name(),$sformatf("TX_MONITOR write item: %s",mon_seq.sprint()),UVM_NONE)
+              tx_mon_analysis_port.write(mon_seq); 
+            end
         end
-      // send seq item to scoreboard through port
-      // in write task must have condition when to accept data_in
-          //@(posedge vif.tx_done);
-        tx_mon_analysis_port.write(mon_seq);
-    end
+        else begin
+        `uvm_info(get_type_name(),"Start Monitor Reset",UVM_NONE)
+          @(posedge vif.rst_n);
+          tx_mon_analysis_port.write(mon_seq);
+        end  
+        end
   endtask
 
 //   // report number item collected in monitor for write agent, and display coverage percentage

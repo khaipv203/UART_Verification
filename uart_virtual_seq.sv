@@ -41,6 +41,10 @@ class simplex_tx extends uart_virtual_seq;
   tx7_stop1_np tx_7;
   tx6_stop1_np tx_6;
   tx5_stop1_np tx_5;
+  tx8_stop2_np tx_8_2;
+  tx8_stop1_odd tx_8_odd_1;
+  tx8_stop2_odd tx_8_odd_2;
+  tx8_stop2_even tx_8_even_2;
 
   // constructor
   function new(input string name="POST_TEST_SEQUENCE");
@@ -50,24 +54,24 @@ class simplex_tx extends uart_virtual_seq;
   // Execute the sequences one after another
   virtual task body();
     `uvm_info(get_full_name(),{"Sequence started : ",get_type_name()},UVM_LOW)
-    // write half to mem
+    `uvm_info(get_full_name(),{"Reset started : ",get_type_name()},UVM_LOW)
     `uvm_do_on(rst_n_seq, p_sequencer.tx_seqr);
-
-    `uvm_info(get_full_name(),{"First seq ",get_type_name()},UVM_LOW)
-    //do nothing
+    `uvm_info(get_full_name(),{"First started ",get_type_name()},UVM_LOW)
     `uvm_do_on(tx_8, p_sequencer.tx_seqr);
-    `uvm_info(get_full_name(),{"Third started : ",get_type_name()},UVM_LOW)
-    // single write
+    `uvm_info(get_full_name(),{"Second started : ",get_type_name()},UVM_LOW)
     `uvm_do_on(tx_7, p_sequencer.tx_seqr);
-
-    `uvm_info(get_full_name(),{"Fourth seq ",get_type_name()},UVM_LOW)
-    // do nothing
+    `uvm_info(get_full_name(),{"Third started : ",get_type_name()},UVM_LOW)
     `uvm_do_on(tx_6, p_sequencer.tx_seqr);
-    
-    `uvm_info(get_full_name(),{"Fifth started : ",get_type_name()},UVM_LOW)
-    // single read
+    `uvm_info(get_full_name(),{"Fourth seq ",get_type_name()},UVM_LOW)
     `uvm_do_on(tx_5, p_sequencer.tx_seqr);
-    
+    `uvm_info(get_full_name(),{"Fifth started : ",get_type_name()},UVM_LOW)
+    `uvm_do_on(tx_8_2, p_sequencer.tx_seqr);
+    `uvm_info(get_full_name(),{"6th started : ",get_type_name()},UVM_LOW)
+    `uvm_do_on(tx_8_odd_1, p_sequencer.tx_seqr);  
+    `uvm_info(get_full_name(),{"7th started : ",get_type_name()},UVM_LOW)   
+    `uvm_do_on(tx_8_odd_2, p_sequencer.tx_seqr);   
+    `uvm_info(get_full_name(),{"8th started : ",get_type_name()},UVM_LOW) 
+    `uvm_do_on(tx_8_even_2, p_sequencer.tx_seqr);  
     #30ns;  // Wait for sequence ended
     `uvm_info(get_full_name(),{"Sequence ended : ",get_type_name()},UVM_LOW)
   endtask

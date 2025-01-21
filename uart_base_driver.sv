@@ -101,16 +101,17 @@ class rx_driver extends uvm_driver#(base_seq_item);
     task drive();
         //`uvm_info(get_type_name(),$sformatf("RX_DRIVER read item: %s",req_item.sprint()),UVM_MEDIUM)
         // if no reset, send item at negedge clk
-        $display("RX_DRIVER read item: %s",seq.sprint());
+        `uvm_info(get_type_name(),$sformatf("RX_DRIVER read item: %s",seq.sprint()),UVM_LOW)
         if (seq.rst_n) begin
             @(negedge vif.clk)
-                $display("drive");
                 vif.rst_n         = seq.rst_n;
                 vif.data_bit_num  = seq.data_bit_num;
                 vif.stop_bit_num  = seq.stop_bit_num;
                 vif.parity_en     = seq.parity_en;
                 vif.parity_type   = seq.parity_type;
-                vif.rx            = 1'b0; //Send start bit
+                vif.rx_serial_data= seq.rx_serial_data;
+            // send start bit
+                vif.rx            = 1'b0;
             case(vif.data_bit_num)
                 2'b00: send_5_bit();
                 2'b01: send_6_bit();
@@ -122,16 +123,14 @@ class rx_driver extends uvm_driver#(base_seq_item);
                 send_parity(seq.parity_type, seq.data_bit_num);
             end
             send_stop_bit(seq.stop_bit_num);
-            @(posedge vif.rx_done);
         end
     // else if reset, send rst_n signal immediatelly
         else begin
             vif.rst_n = seq.rst_n;
         end
     endtask
-    
+
     task send_8_bit();
-      $display("send_8_bit");
       for(int i = 0; i < 8; i=i+1) begin
             repeat (cnt_clk) @(posedge vif.clk);
             vif.rx = seq.rx_serial_data[i];

@@ -4,6 +4,7 @@
     interface uart_if (input bit clk);
     logic                    rst_n;
     logic                    cts_n;
+    logic [7:0]              rx_serial_data;
     logic [7:0]              tx_data;
     logic [1:0]              data_bit_num;
     logic                    stop_bit_num;

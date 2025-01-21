@@ -156,7 +156,7 @@ class simplex_rx_test extends base_test;
 
   // set base sequence is overriden by high level sequence
   function void build_phase(uvm_phase phase);
-    set_type_override_by_type(uart_base_seq::get_type(), simplex_rx::get_type());
+    uvm_config_int::set(this, "*tx*", "is_active", UVM_PASSIVE);
     super.build_phase(phase);
   endfunction 
 

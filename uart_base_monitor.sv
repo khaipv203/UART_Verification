@@ -47,7 +47,7 @@ localparam cnt_clk = 50000000/(115200);
   // instance sequence item and get item from VIF, sample covergroup
     virtual task run_phase(uvm_phase phase);
         super.run_phase(phase);
-      `uvm_info(get_full_name(),{"Starting Run phase for ",get_type_name()}, UVM_LOW)
+        `uvm_info(get_full_name(),{"Starting Run phase for ",get_type_name()}, UVM_LOW)
         forever begin
         // instance sequence item to hold value get from VIF and send to scoreboard
         base_seq_item mon_seq = base_seq_item::type_id::create("mon_seq");
@@ -172,6 +172,7 @@ class rx_monitor extends uvm_monitor;
   
   // analysis port to commu with scoreboard
   uvm_analysis_port #(base_seq_item) rx_mon_analysis_port;
+  localparam cnt_clk = 50000000/115200;
 
 
   /////////////////////////////////////////
@@ -211,15 +212,17 @@ class rx_monitor extends uvm_monitor;
       // instance sequence item to hold value get from VIF and send to scoreboard
       base_seq_item mon_seq = base_seq_item::type_id::create("mon_seq");
 	  // get signal from VIF on posedge clk
-      @(posedge vif.clk)
+      @(negedge vif.rx_done);
+      mon_seq.rst_n = vif.rst_n;
+      mon_seq.rx_serial_data = vif.rx_serial_data;
       // if no reset and there is read request, get signal and flag from VIF
-      if(vif.rst_n && !vif.rx_done) begin
+      if(vif.rst_n) begin
         mon_seq.data_bit_num  = vif.data_bit_num;
         mon_seq.stop_bit_num  = vif.stop_bit_num;
         mon_seq.parity_en     = vif.parity_en;
         mon_seq.parity_type   = vif.parity_type;
         mon_seq.rts_n         = vif.rts_n;
-        @(vif.rx_done)
+        repeat ((int'(vif.data_bit_num) + int'(vif.parity_en) + 5)*cnt_clk) @(posedge vif.clk);
         mon_seq.rx_data = vif.rx_data;
         mon_seq.parity_error = vif.parity_error;
         mon_seq.parity_bit = vif.parity_bit;

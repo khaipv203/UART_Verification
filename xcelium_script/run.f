@@ -9,11 +9,12 @@
 //-incdir .
 
 // options
-+UVM_VERBOSITY=UVM_MEDIUM
++UVM_VERBOSITY=UVM_LOW
 
 // (un)comment lines to select test
 //+UVM_TESTNAME=simplex_tx_test
-+UVM_TESTNAME=simplex_rx_test
+//+UVM_TESTNAME=simplex_rx_test
++UVM_TESTNAME=random_rx_test
 //+SVSEED=random 
 
 // compile files

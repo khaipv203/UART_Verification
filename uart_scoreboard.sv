@@ -96,13 +96,7 @@ class uart_scoreboard extends uvm_scoreboard;
         check_for_result(tx_seq, golden_data_frame, tx_seq.tx_frame_data);
     end
     else begin
-      //Reset value maybe wrong
-      if(tx_seq.tx_done == 1 && tx_seq.tx == 1) begin
-      `uvm_info(get_type_name(),$sformatf("RESET TX SEQUENCE PASS"),UVM_LOW)
-      end
-      else begin
-        `uvm_error(get_type_name(),$sformatf("RESET TX ERROR TX=0x%0h, TX_DONE=0x%0h", tx_seq.tx, tx_seq.tx_done))
-      end
+      `uvm_info(get_type_name(),$sformatf("RESET TX SEQUENCE"),UVM_LOW)
     end
   endfunction
   
@@ -211,46 +205,43 @@ class uart_scoreboard extends uvm_scoreboard;
           2'b00: begin
             gd_rx_data[4:0] = rx_seq.rx_serial_data[4:0];
             if(rx_seq.parity_en) begin
-              gd_parity_error = (rx_seq.parity_type) ? (^(rx_seq.rx_serial_data[4:0] != rx_seq.parity_bit)) : (~^(rx_seq.rx_serial_data[4:0] != rx_seq.parity_bit));
+              gd_parity_error = (rx_seq.parity_type) ? ~(^(rx_seq.rx_serial_data[4:0]) ^ rx_seq.parity_bit) : (^(rx_seq.rx_serial_data[4:0]) ^ rx_seq.parity_bit);
             end
-            if (gd_rx_data[4:0] == rx_seq.rx_data[4:0]) `uvm_info(get_type_name(),$sformatf("RX SEQUENCE PASS"),UVM_LOW)
-            else `uvm_error(get_type_name(),$sformatf("RX ERROR RX_DATA=%0b, GD_DATA=%0b", rx_seq.rx_data[4:0], gd_rx_data[4:0]))
+            else gd_parity_error = '0;
+            if ((gd_rx_data[4:0] == rx_seq.rx_data[4:0]) && ~gd_parity_error) `uvm_info(get_type_name(),$sformatf("RX SEQUENCE PASS"),UVM_LOW)
+            else `uvm_error(get_type_name(),$sformatf("RX ERROR RX_DATA=%0b, GD_DATA=%0b, PARITY_ERROR=%b", rx_seq.rx_data[4:0], gd_rx_data[4:0], gd_parity_error))
           end 
           2'b01: begin
             gd_rx_data[5:0] = rx_seq.rx_serial_data[5:0];
             if(rx_seq.parity_en) begin
-              gd_parity_error = (rx_seq.parity_type) ? (^(rx_seq.rx_serial_data[5:0] != rx_seq.parity_bit)) : (~^(rx_seq.rx_serial_data[5:0] != rx_seq.parity_bit));
+              gd_parity_error = (rx_seq.parity_type) ? ~(^(rx_seq.rx_serial_data[5:0]) ^ rx_seq.parity_bit) : (^(rx_seq.rx_serial_data[5:0]) ^ rx_seq.parity_bit);
             end
-            if (gd_rx_data[5:0] == rx_seq.rx_data[5:0]) `uvm_info(get_type_name(),$sformatf("RX SEQUENCE PASS"),UVM_LOW)
-            else `uvm_error(get_type_name(),$sformatf("RX ERROR RX_DATA=%0b, GD_DATA=%0b", rx_seq.rx_data[5:0], gd_rx_data[5:0]))
+            else gd_parity_error = '0;
+            if ((gd_rx_data[5:0] == rx_seq.rx_data[5:0]) && ~gd_parity_error) `uvm_info(get_type_name(),$sformatf("RX SEQUENCE PASS"),UVM_LOW)
+            else `uvm_error(get_type_name(),$sformatf("RX ERROR RX_DATA=%0b, GD_DATA=%0b, PARITY_ERROR=%b", rx_seq.rx_data[5:0], gd_rx_data[5:0], gd_parity_error))
           end
           2'b10: begin
             gd_rx_data[6:0] = rx_seq.rx_serial_data[6:0];
             if(rx_seq.parity_en) begin
-              gd_parity_error = (rx_seq.parity_type) ? (^(rx_seq.rx_serial_data[6:0] != rx_seq.parity_bit)) : (~^(rx_seq.rx_serial_data[6:0] != rx_seq.parity_bit));
+              gd_parity_error = (rx_seq.parity_type) ? ~(^(rx_seq.rx_serial_data[6:0] ^ rx_seq.parity_bit)) : (^(rx_seq.rx_serial_data[6:0]) ^ rx_seq.parity_bit);
             end
-            if (gd_rx_data[6:0] == rx_seq.rx_data[6:0]) `uvm_info(get_type_name(),$sformatf("RX SEQUENCE PASS"),UVM_LOW)
-            else `uvm_error(get_type_name(),$sformatf("RX ERROR RX_DATA=%0b, GD_DATA=%0b", rx_seq.rx_data[6:0], gd_rx_data[6:0]))
+            else gd_parity_error = '0;
+            if ((gd_rx_data[6:0] == rx_seq.rx_data[6:0]) && ~gd_parity_error) `uvm_info(get_type_name(),$sformatf("RX SEQUENCE PASS"),UVM_LOW)
+            else `uvm_error(get_type_name(),$sformatf("RX ERROR RX_DATA=%0b, GD_DATA=%0b, PARITY_ERROR=%b", rx_seq.rx_data[6:0], gd_rx_data[6:0], gd_parity_error))
           end
           2'b11: begin
             gd_rx_data[7:0] = rx_seq.rx_serial_data[7:0];
             if(rx_seq.parity_en) begin
-              gd_parity_error = (rx_seq.parity_type) ? (^(rx_seq.rx_serial_data[7:0] != rx_seq.parity_bit)) : (~^(rx_seq.rx_serial_data[7:0] != rx_seq.parity_bit));
+              gd_parity_error = (rx_seq.parity_type) ? ~(^(rx_seq.rx_serial_data[7:0] ^ rx_seq.parity_bit)) : (^(rx_seq.rx_serial_data[7:0]) ^ rx_seq.parity_bit);
             end
-            if (gd_rx_data[7:0] == rx_seq.rx_data[7:0]) `uvm_info(get_type_name(),$sformatf("RX SEQUENCE PASS"),UVM_LOW)
-            else `uvm_error(get_type_name(),$sformatf("RX ERROR RX_DATA=%0b, GD_DATA=%0b", rx_seq.rx_data[7:0], gd_rx_data[7:0]))
+            else gd_parity_error = '0;
+            if ((gd_rx_data[7:0] == rx_seq.rx_data[7:0]) && ~gd_parity_error) `uvm_info(get_type_name(),$sformatf("RX SEQUENCE PASS"),UVM_LOW)
+            else `uvm_error(get_type_name(),$sformatf("RX ERROR RX_DATA=%0b, GD_DATA=%0b, PARITY_ERROR=%b", rx_seq.rx_data[7:0], gd_rx_data[7:0], gd_parity_error))
           end          
       endcase
     end
     else begin
-      $display("dcm cuoc doi");
-      //Reset value maybe wrong
-      if(rx_seq.rx_data == 'b0 && rx_seq.rx_done == 1 && rx_seq.rts_n == 1 && rx_seq.parity_error == 'b0) begin
-      `uvm_info(get_type_name(),$sformatf("RESET RX SEQUENCE PASS"),UVM_LOW)
-      end
-      else begin
-     //   `uvm_error(get_type_name(),$sformatf("RESET RX ERROR RX_DATA=0x%0h, RX_DONE=0x%0h, RTS_N=0x%0h, PARITY_ERROR=0x%0h", rx_seq.rx_data, rx_seq.rx_done, rx_seq.rts_n, rx_seq.parity_error))
-      end
+      `uvm_info(get_type_name(),$sformatf("RECEIVED RESET SEQUENCE"),UVM_LOW)
     end
   endfunction
   

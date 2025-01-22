@@ -227,10 +227,10 @@ class rx_monitor extends uvm_monitor;
     forever begin
       // instance sequence item to hold value get from VIF and send to scoreboard
       base_seq_item mon_seq = base_seq_item::type_id::create("mon_seq");
-	  // get signal from VIF on posedge clk
+	    // get signal from VIF on negedge rx_done
       @(negedge vif.rx_done);
-      mon_seq.rst_n = vif.rst_n;
       mon_seq.rx_serial_data = vif.rx_serial_data;
+      mon_seq.rst_n = vif.rst_n;
       // if no reset and there is read request, get signal and flag from VIF
       if(vif.rst_n) begin
         mon_seq.data_bit_num  = vif.data_bit_num;
@@ -242,7 +242,7 @@ class rx_monitor extends uvm_monitor;
         mon_seq.rx_data = vif.rx_data;
         mon_seq.parity_error = vif.parity_error;
         mon_seq.parity_bit = vif.parity_bit;
-        `uvm_info(get_type_name(),$sformatf("RX_MONITOR read item: %s",mon_seq.sprint()),UVM_MEDIUM)
+        `uvm_info(get_type_name(),$sformatf("RX_MONITOR read item: %s",mon_seq.sprint()),UVM_LOW)
         // $display("[%0t] empty = %0d",$time,vif.fifo_empty); // for debug
         // increase counter for read seq
       //   read_cnt++;

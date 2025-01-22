@@ -101,7 +101,7 @@ class rx_driver extends uvm_driver#(base_seq_item);
     task drive();
         //`uvm_info(get_type_name(),$sformatf("RX_DRIVER read item: %s",req_item.sprint()),UVM_MEDIUM)
         // if no reset, send item at negedge clk
-        `uvm_info(get_type_name(),$sformatf("RX_DRIVER read item: %s",seq.sprint()),UVM_LOW)
+        `uvm_info(get_type_name(),$sformatf("RX_DRIVER read item: %s",seq.sprint()),UVM_MEDIUM)
         if (seq.rst_n) begin
             @(negedge vif.clk)
                 vif.rst_n         = seq.rst_n;
@@ -128,6 +128,7 @@ class rx_driver extends uvm_driver#(base_seq_item);
         else begin
             vif.rst_n = seq.rst_n;
         end
+        repeat (14*vif.data_bit_num) @(posedge vif.clk);
     endtask
 
     task send_8_bit();
@@ -216,4 +217,50 @@ class rx_driver extends uvm_driver#(base_seq_item);
             //Enough ????
         endcase    
     endtask
+
+    task send_false_parity(logic parity_type, logic [1:0] data_bit_num);
+        repeat (cnt_clk) @(posedge vif.clk);
+        case({parity_type, data_bit_num})
+            3'b000: begin
+              vif.rx = ^(seq.rx_serial_data[4:0]); //Odd parity, 5 bit data
+              vif.parity_bit = ^(seq.rx_serial_data[4:0]);
+            end 
+            3'b001: begin
+              vif.rx = ^(seq.rx_serial_data[5:0]); //Odd parity, 6 bit data
+              vif.parity_bit = ^(seq.rx_serial_data[5:0]);
+            end 
+            3'b010: begin
+              vif.rx = ~^(seq.rx_serial_data[6:0]); //Odd parity, 7 bit data
+              vif.parity_bit = ^(seq.rx_serial_data[6:0]);
+            end
+            3'b011: begin
+              vif.rx = ~^(seq.rx_serial_data[7:0]); //Odd parity, 8 bit data
+              vif.parity_bit = ^(seq.rx_serial_data[7:0]);
+            end
+            
+            3'b100: begin
+              vif.rx = ^(seq.rx_serial_data[4:0]); //Even parity, 5 bit data
+              vif.parity_bit = ~^(seq.rx_serial_data[4:0]);
+            end
+            
+            3'b101: begin
+              vif.rx = ^(seq.rx_serial_data[5:0]); //Even parity, 6 bit data
+              vif.parity_bit = ~^(seq.rx_serial_data[5:0]); 
+            end
+            
+            3'b110: begin
+              vif.rx = ^(seq.rx_serial_data[6:0]); //Even parity, 7 bit data
+              vif.parity_bit = ~^(seq.rx_serial_data[6:0]); 
+            end
+            3'b111: begin
+              vif.rx = ^(seq.rx_serial_data[7:0]); //Even parity, 8 bit data
+              vif.parity_bit = ~^(seq.rx_serial_data[7:0]); 
+            end
+            default: begin 
+              vif.rx = ^(seq.rx_serial_data[7:0]); //Even parity, 8 bit data
+              vif.parity_bit = ~^(seq.rx_serial_data[7:0]); 
+            end
+            //Enough ????
+        endcase    
+  endtask
 endclass

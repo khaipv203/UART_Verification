@@ -230,34 +230,34 @@ class rx_driver extends uvm_driver#(base_seq_item);
               vif.parity_bit = ^(seq.rx_serial_data[5:0]);
             end 
             3'b010: begin
-              vif.rx = ~^(seq.rx_serial_data[6:0]); //Odd parity, 7 bit data
+              vif.rx = ^(seq.rx_serial_data[6:0]); //Odd parity, 7 bit data
               vif.parity_bit = ^(seq.rx_serial_data[6:0]);
             end
             3'b011: begin
-              vif.rx = ~^(seq.rx_serial_data[7:0]); //Odd parity, 8 bit data
+              vif.rx = ^(seq.rx_serial_data[7:0]); //Odd parity, 8 bit data
               vif.parity_bit = ^(seq.rx_serial_data[7:0]);
             end
             
             3'b100: begin
-              vif.rx = ^(seq.rx_serial_data[4:0]); //Even parity, 5 bit data
+              vif.rx = ~^(seq.rx_serial_data[4:0]); //Even parity, 5 bit data
               vif.parity_bit = ~^(seq.rx_serial_data[4:0]);
             end
             
             3'b101: begin
-              vif.rx = ^(seq.rx_serial_data[5:0]); //Even parity, 6 bit data
+              vif.rx = ~^(seq.rx_serial_data[5:0]); //Even parity, 6 bit data
               vif.parity_bit = ~^(seq.rx_serial_data[5:0]); 
             end
             
             3'b110: begin
-              vif.rx = ^(seq.rx_serial_data[6:0]); //Even parity, 7 bit data
+              vif.rx = ~^(seq.rx_serial_data[6:0]); //Even parity, 7 bit data
               vif.parity_bit = ~^(seq.rx_serial_data[6:0]); 
             end
             3'b111: begin
-              vif.rx = ^(seq.rx_serial_data[7:0]); //Even parity, 8 bit data
+              vif.rx = ~^(seq.rx_serial_data[7:0]); //Even parity, 8 bit data
               vif.parity_bit = ~^(seq.rx_serial_data[7:0]); 
             end
             default: begin 
-              vif.rx = ^(seq.rx_serial_data[7:0]); //Even parity, 8 bit data
+              vif.rx = ~^(seq.rx_serial_data[7:0]); //Even parity, 8 bit data
               vif.parity_bit = ~^(seq.rx_serial_data[7:0]); 
             end
             //Enough ????

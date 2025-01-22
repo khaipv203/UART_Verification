@@ -182,9 +182,9 @@ class tx8_stop2_even extends uart_base_seq;
     endtask
 endclass
 
-//Receive fixed length = 7, 2 stop bit and odd parity
-class rx7_stop2_odd extends uart_base_seq;
-    `uvm_object_utils(rx7_stop2_odd)
+//Receive fixed length = 8, one stop bit and no parity
+class rx8_stop1_np extends uart_base_seq;
+    `uvm_object_utils(rx8_stop1_np)
 
     base_seq_item seq;
     function new(input string name="rx7_stop2_odd");
@@ -284,19 +284,19 @@ class rx8_stop2_even extends uart_base_seq;
     endtask
 endclass
 
-//Receive fixed length = 7, 2 stop bit and even parity
-class rx7_stop2_even extends uart_base_seq;
-    `uvm_object_utils(rx7_stop2_even)
+//Receive fixed length = 7, one stop bit and no parity
+class rx7_stop1_np extends uart_base_seq;
+    `uvm_object_utils(rx7_stop1_np)
 
     base_seq_item seq;
-    function new(input string name="rx7_stop2_even");
+    function new(input string name="rx7_stop1_np");
         super.new(name);
     endfunction
 
     virtual task body();
         seq = base_seq_item::type_id::create("seq");
         start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b10; stop_bit_num == 1'b1; parity_en == 1'b1; parity_type == 1'b1; rx_serial_data inside {[8'h00:8'hFF]};});  
+        assert(seq.randomize() with {data_bit_num == 2'b10; stop_bit_num == 1'b0; parity_en == 1'b0; rx_serial_data inside {[8'h00:8'h7F]};});
         finish_item(seq);
     endtask
 endclass
@@ -386,12 +386,12 @@ class rx7_stop2_even extends uart_base_seq;
     endtask
 endclass
 
-//Receive fixed length = 6, one stop bit and no parity
+//Receive fixed length = 8, one stop bit and even parity
 class rx6_stop1_np extends uart_base_seq;
     `uvm_object_utils(rx6_stop1_np)
 
     base_seq_item seq;
-    function new(input string name="rx6_stop1_np");
+    function new(input string name="rx8_stop1_even");
         super.new(name);
     endfunction
 

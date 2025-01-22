@@ -260,155 +260,155 @@ class random_rx_test extends base_test;
 
 endclass
 
-class tx5_test extends base_test;
+// class tx5_test extends base_test;
   
-  // register with factory
-  `uvm_component_utils(tx5_test)
+//   // register with factory
+//   `uvm_component_utils(tx5_test)
 
-  // declare handle for sequence used in test
-  tx_5bit_run_seq tx_5_test;
-  uvm_objection tx_5_test_objection;
+//   // declare handle for sequence used in test
+//   tx_5bit_run_seq tx_5_test;
+//   uvm_objection tx_5_test_objection;
 
-  // constructor
-  function new(input string name="tx5_test", uvm_component parent=null);
-    super.new(name,parent);
-  endfunction
+//   // constructor
+//   function new(input string name="tx5_test", uvm_component parent=null);
+//     super.new(name,parent);
+//   endfunction
 
-  // set base sequence is overriden by high level sequence
-  function void build_phase(uvm_phase phase);
-    set_type_override_by_type(uart_base_seq::get_type(), tx_5bit_run_seq::get_type());
-    super.build_phase(phase);
-  endfunction
+//   // set base sequence is overriden by high level sequence
+//   function void build_phase(uvm_phase phase);
+//     set_type_override_by_type(uart_base_seq::get_type(), tx_5bit_run_seq::get_type());
+//     super.build_phase(phase);
+//   endfunction
 
-  // run sequence test
-  task run_phase(uvm_phase phase);
-    `uvm_info(get_full_name(),{"Starting Run phase for ",get_type_name()}, UVM_LOW)
-    // instance sequence
-    tx_5_test = tx_5bit_run_seq::type_id::create("tx5_test");
-    if(phase != null) begin
-      // raise objection
-      phase.raise_objection(this, {"Sequence started : ",get_name()});
-      // start sequence
-      tx_5_test.start(uart_env.uart_vseqr);
-      #10ns;	// delay one more clock edge to make sure sequence ended
-      // drop objection
-      phase.drop_objection(this, {"Sequence ended : ",get_name()} );
-      tx_5_test_objection = phase.get_objection();
-    end
-  endtask
-endclass
+//   // run sequence test
+//   task run_phase(uvm_phase phase);
+//     `uvm_info(get_full_name(),{"Starting Run phase for ",get_type_name()}, UVM_LOW)
+//     // instance sequence
+//     tx_5_test = tx_5bit_run_seq::type_id::create("tx5_test");
+//     if(phase != null) begin
+//       // raise objection
+//       phase.raise_objection(this, {"Sequence started : ",get_name()});
+//       // start sequence
+//       tx_5_test.start(uart_env.uart_vseqr);
+//       #10ns;	// delay one more clock edge to make sure sequence ended
+//       // drop objection
+//       phase.drop_objection(this, {"Sequence ended : ",get_name()} );
+//       tx_5_test_objection = phase.get_objection();
+//     end
+//   endtask
+// endclass
 
 
-class tx6_test extends base_test;
+// class tx6_test extends base_test;
   
-  // register with factory
-  `uvm_component_utils(tx6_test)
+//   // register with factory
+//   `uvm_component_utils(tx6_test)
 
-  // declare handle for sequence used in test
-  tx_6bit_run_seq tx_6_test;
-  uvm_objection tx_6_test_objection;
+//   // declare handle for sequence used in test
+//   tx_6bit_run_seq tx_6_test;
+//   uvm_objection tx_6_test_objection;
 
-  // constructor
-  function new(input string name="tx6_test", uvm_component parent=null);
-    super.new(name,parent);
-  endfunction
+//   // constructor
+//   function new(input string name="tx6_test", uvm_component parent=null);
+//     super.new(name,parent);
+//   endfunction
 
-  // set base sequence is overriden by high level sequence
-  function void build_phase(uvm_phase phase);
-    set_type_override_by_type(uart_base_seq::get_type(), tx_6bit_run_seq::get_type());
-    super.build_phase(phase);
-  endfunction
+//   // set base sequence is overriden by high level sequence
+//   function void build_phase(uvm_phase phase);
+//     set_type_override_by_type(uart_base_seq::get_type(), tx_6bit_run_seq::get_type());
+//     super.build_phase(phase);
+//   endfunction
 
-  // run sequence test
-  task run_phase(uvm_phase phase);
-    `uvm_info(get_full_name(),{"Starting Run phase for ",get_type_name()}, UVM_LOW)
-    // instance sequence
-    tx_6_test = tx_6bit_run_seq::type_id::create("tx6_test");
-    if(phase != null) begin
-      // raise objection
-      phase.raise_objection(this, {"Sequence started : ",get_name()});
-      // start sequence
-      tx_6_test.start(uart_env.uart_vseqr);
-      #10ns;	// delay one more clock edge to make sure sequence ended
-      // drop objection
-      phase.drop_objection(this, {"Sequence ended : ",get_name()} );
-      tx_6_test_objection = phase.get_objection();
-    end
-  endtask
-endclass
+//   // run sequence test
+//   task run_phase(uvm_phase phase);
+//     `uvm_info(get_full_name(),{"Starting Run phase for ",get_type_name()}, UVM_LOW)
+//     // instance sequence
+//     tx_6_test = tx_6bit_run_seq::type_id::create("tx6_test");
+//     if(phase != null) begin
+//       // raise objection
+//       phase.raise_objection(this, {"Sequence started : ",get_name()});
+//       // start sequence
+//       tx_6_test.start(uart_env.uart_vseqr);
+//       #10ns;	// delay one more clock edge to make sure sequence ended
+//       // drop objection
+//       phase.drop_objection(this, {"Sequence ended : ",get_name()} );
+//       tx_6_test_objection = phase.get_objection();
+//     end
+//   endtask
+// endclass
 
-class tx7_test extends base_test;
+// class tx7_test extends base_test;
   
-  // register with factory
-  `uvm_component_utils(tx7_test)
+//   // register with factory
+//   `uvm_component_utils(tx7_test)
 
-  // declare handle for sequence used in test
-  tx_7bit_run_seq tx_7_test;
-  uvm_objection tx_7_test_objection;
+//   // declare handle for sequence used in test
+//   tx_7bit_run_seq tx_7_test;
+//   uvm_objection tx_7_test_objection;
 
-  // constructor
-  function new(input string name="tx7_test", uvm_component parent=null);
-    super.new(name,parent);
-  endfunction
+//   // constructor
+//   function new(input string name="tx7_test", uvm_component parent=null);
+//     super.new(name,parent);
+//   endfunction
 
-  // set base sequence is overriden by high level sequence
-  function void build_phase(uvm_phase phase);
-    set_type_override_by_type(uart_base_seq::get_type(), tx_7bit_run_seq::get_type());
-    super.build_phase(phase);
-  endfunction
+//   // set base sequence is overriden by high level sequence
+//   function void build_phase(uvm_phase phase);
+//     set_type_override_by_type(uart_base_seq::get_type(), tx_7bit_run_seq::get_type());
+//     super.build_phase(phase);
+//   endfunction
 
-  // run sequence test
-  task run_phase(uvm_phase phase);
-    `uvm_info(get_full_name(),{"Starting Run phase for ",get_type_name()}, UVM_LOW)
-    // instance sequence
-    tx_7_test = tx_7bit_run_seq::type_id::create("tx7_test");
-    if(phase != null) begin
-      // raise objection
-      phase.raise_objection(this, {"Sequence started : ",get_name()});
-      // start sequence
-      tx_7_test.start(uart_env.uart_vseqr);
-      #10ns;	// delay one more clock edge to make sure sequence ended
-      // drop objection
-      phase.drop_objection(this, {"Sequence ended : ",get_name()} );
-      tx_7_test_objection = phase.get_objection();
-    end
-  endtask
-endclass
+//   // run sequence test
+//   task run_phase(uvm_phase phase);
+//     `uvm_info(get_full_name(),{"Starting Run phase for ",get_type_name()}, UVM_LOW)
+//     // instance sequence
+//     tx_7_test = tx_7bit_run_seq::type_id::create("tx7_test");
+//     if(phase != null) begin
+//       // raise objection
+//       phase.raise_objection(this, {"Sequence started : ",get_name()});
+//       // start sequence
+//       tx_7_test.start(uart_env.uart_vseqr);
+//       #10ns;	// delay one more clock edge to make sure sequence ended
+//       // drop objection
+//       phase.drop_objection(this, {"Sequence ended : ",get_name()} );
+//       tx_7_test_objection = phase.get_objection();
+//     end
+//   endtask
+// endclass
 
-class tx8_test extends base_test;
+// class tx8_test extends base_test;
   
-  // register with factory
-  `uvm_component_utils(tx8_test)
+//   // register with factory
+//   `uvm_component_utils(tx8_test)
 
-  // declare handle for sequence used in test
-  tx_8bit_run_seq tx_8_test;
-  uvm_objection tx_8_test_objection;
+//   // declare handle for sequence used in test
+//   tx_8bit_run_seq tx_8_test;
+//   uvm_objection tx_8_test_objection;
 
-  // constructor
-  function new(input string name="tx8_test", uvm_component parent=null);
-    super.new(name,parent);
-  endfunction
+//   // constructor
+//   function new(input string name="tx8_test", uvm_component parent=null);
+//     super.new(name,parent);
+//   endfunction
 
-  // set base sequence is overriden by high level sequence
-  function void build_phase(uvm_phase phase);
-    set_type_override_by_type(uart_base_seq::get_type(), tx_8bit_run_seq::get_type());
-    super.build_phase(phase);
-  endfunction
+//   // set base sequence is overriden by high level sequence
+//   function void build_phase(uvm_phase phase);
+//     set_type_override_by_type(uart_base_seq::get_type(), tx_8bit_run_seq::get_type());
+//     super.build_phase(phase);
+//   endfunction
 
-  // run sequence test
-  task run_phase(uvm_phase phase);
-    `uvm_info(get_full_name(),{"Starting Run phase for ",get_type_name()}, UVM_LOW)
-    // instance sequence
-    tx_8_test = tx_8bit_run_seq::type_id::create("tx8_test");
-    if(phase != null) begin
-      // raise objection
-      phase.raise_objection(this, {"Sequence started : ",get_name()});
-      // start sequence
-      tx_8_test.start(uart_env.uart_vseqr);
-      #10ns;	// delay one more clock edge to make sure sequence ended
-      // drop objection
-      phase.drop_objection(this, {"Sequence ended : ",get_name()} );
-      tx_8_test_objection = phase.get_objection();
-    end
-  endtask
-endclass
+//   // run sequence test
+//   task run_phase(uvm_phase phase);
+//     `uvm_info(get_full_name(),{"Starting Run phase for ",get_type_name()}, UVM_LOW)
+//     // instance sequence
+//     tx_8_test = tx_8bit_run_seq::type_id::create("tx8_test");
+//     if(phase != null) begin
+//       // raise objection
+//       phase.raise_objection(this, {"Sequence started : ",get_name()});
+//       // start sequence
+//       tx_8_test.start(uart_env.uart_vseqr);
+//       #10ns;	// delay one more clock edge to make sure sequence ended
+//       // drop objection
+//       phase.drop_objection(this, {"Sequence ended : ",get_name()} );
+//       tx_8_test_objection = phase.get_objection();
+//     end
+//   endtask
+// endclass

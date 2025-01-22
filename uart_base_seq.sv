@@ -29,159 +29,6 @@ class reset_seq extends uart_base_seq;
     endtask
 endclass
 
-//Transmit fixed length = 8, one stop bit and no parity
-class tx8_stop1_np extends uart_base_seq;
-    `uvm_object_utils(tx8_stop1_np)
-
-    base_seq_item seq;
-    function new(input string name="tx8_stop1_np");
-        super.new(name);
-    endfunction
-
-    virtual task body();
-        seq = base_seq_item::type_id::create("seq");
-        start_item(seq);
-      assert(seq.randomize() with {tx_data == 8'hF; data_bit_num == 2'b11; stop_bit_num == 1'b0; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
-        finish_item(seq);
-    endtask
-endclass
-
-//Transmit fixed length = 7, one stop bit and no parity
-class tx7_stop1_np extends uart_base_seq;
-    `uvm_object_utils(tx7_stop1_np)
-
-    base_seq_item seq;
-    function new(input string name="tx7_stop1_np");
-        super.new(name);
-    endfunction
-
-    virtual task body();
-        seq = base_seq_item::type_id::create("seq");
-        start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b10; stop_bit_num == 1'b0; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
-        finish_item(seq);
-    endtask
-endclass
-
-//Transmit fixed length = 6, one stop bit and no parity
-class tx6_stop1_np extends uart_base_seq;
-    `uvm_object_utils(tx6_stop1_np)
-
-    base_seq_item seq;
-    function new(input string name="tx6_stop1_np");
-        super.new(name);
-    endfunction
-
-    virtual task body();
-        seq = base_seq_item::type_id::create("seq");
-        start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b01; stop_bit_num == 1'b0; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
-        finish_item(seq);
-    endtask
-endclass
-
-//Transmit fixed length = 5, one stop bit and no parity
-class tx5_stop1_np extends uart_base_seq;
-    `uvm_object_utils(tx5_stop1_np)
-
-    base_seq_item seq;
-    function new(input string name="tx5_stop1_np");
-        super.new(name);
-    endfunction
-
-    virtual task body();
-        seq = base_seq_item::type_id::create("seq");
-        start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b00; stop_bit_num == 1'b0; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
-        finish_item(seq);
-    endtask
-endclass
-
-//Transmit fixed length = 8, two stop bit and no parity
-class tx8_stop2_np extends uart_base_seq;
-    `uvm_object_utils(tx8_stop2_np)
-
-    base_seq_item seq;
-    function new(input string name="tx8_stop2_np");
-        super.new(name);
-    endfunction
-
-    virtual task body();
-        seq = base_seq_item::type_id::create("seq");
-        start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b1; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
-        finish_item(seq);
-    endtask
-endclass
-
-//Transmit fixed length = 8, one stop bit and odd parity
-class tx8_stop1_odd extends uart_base_seq;
-    `uvm_object_utils(tx8_stop1_odd)
-
-    base_seq_item seq;
-    function new(input string name="tx8_stop1_odd");
-        super.new(name);
-    endfunction
-
-    virtual task body();
-        seq = base_seq_item::type_id::create("seq");
-        start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b0; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b0;});
-        finish_item(seq);
-    endtask
-endclass
-
-//Transmit fixed length = 8, one stop bit and even parity
-class tx8_stop1_even extends uart_base_seq;
-    `uvm_object_utils(tx8_stop1_even)
-
-    base_seq_item seq;
-    function new(input string name="RESET_SEQ");
-        super.new(name);
-    endfunction
-
-    virtual task body();
-        seq = base_seq_item::type_id::create("tx8_stop1_even");
-        start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b0; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b1;});
-        finish_item(seq);
-    endtask
-endclass
-
-//Transmit fixed length = 8, two stop bit and odd parity
-class tx8_stop2_odd extends uart_base_seq;
-    `uvm_object_utils(tx8_stop2_odd)
-
-    base_seq_item seq;
-    function new(input string name="tx8_stop2_odd");
-        super.new(name);
-    endfunction
-
-    virtual task body();
-        seq = base_seq_item::type_id::create("seq");
-        start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b1; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b0;});
-        finish_item(seq);
-    endtask
-endclass
-
-//Transmit fixed length = 8, two stop bit and even parity
-class tx8_stop2_even extends uart_base_seq;
-    `uvm_object_utils(tx8_stop2_even)
-
-    base_seq_item seq;
-    function new(input string name="tx8_stop2_even");
-        super.new(name);
-    endfunction
-
-    virtual task body();
-        seq = base_seq_item::type_id::create("seq");
-        start_item(seq);
-        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b1; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b1;});
-        finish_item(seq);
-    endtask
-endclass
-
 //Receive fixed length = 8, one stop bit and no parity
 class rx8_stop1_np extends uart_base_seq;
     `uvm_object_utils(rx8_stop1_np)
@@ -337,14 +184,453 @@ endclass
 
 
 
-////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
-FULL-DUPLEX Test
+* 8 bit data test
 */
-////////////////////////////////////////////////
+//Transmit fixed length = 8, one stop bit and no parity
+class tx8_stop1_np extends uart_base_seq;
+    `uvm_object_utils(tx8_stop1_np)
+
+    base_seq_item seq;
+    function new(input string name="tx8_stop1_np");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+      assert(seq.randomize() with {tx_data == 8'hF; data_bit_num == 2'b11; stop_bit_num == 1'b0; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+
+//Transmit fixed length = 8, one stop bit and odd parity
+class tx8_stop1_odd extends uart_base_seq;
+    `uvm_object_utils(tx8_stop1_odd)
+
+    base_seq_item seq;
+    function new(input string name="tx8_stop1_odd");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b0; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b0;});
+        finish_item(seq);
+    endtask
+endclass
+
+//Transmit fixed length = 8, one stop bit and even parity
+class tx8_stop1_even extends uart_base_seq;
+    `uvm_object_utils(tx8_stop1_even)
+
+    base_seq_item seq;
+    function new(input string name="RESET_SEQ");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("tx8_stop1_even");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b0; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+
+//Transmit fixed length = 8, two stop bit and no parity
+class tx8_stop2_np extends uart_base_seq;
+    `uvm_object_utils(tx8_stop2_np)
+
+    base_seq_item seq;
+    function new(input string name="tx8_stop2_np");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b1; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
 
 
-////////////////////////////////////////////////
+//Transmit fixed length = 8, two stop bit and odd parity
+class tx8_stop2_odd extends uart_base_seq;
+    `uvm_object_utils(tx8_stop2_odd)
+
+    base_seq_item seq;
+    function new(input string name="tx8_stop2_odd");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b1; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b0;});
+        finish_item(seq);
+    endtask
+endclass
+
+
+//Transmit fixed length = 8, two stop bit and even parity
+class tx8_stop2_even extends uart_base_seq;
+    `uvm_object_utils(tx8_stop2_even)
+
+    base_seq_item seq;
+    function new(input string name="tx8_stop2_even");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b11; stop_bit_num == 1'b1; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+///////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+* 7 bit data test
+*/
+//Transmit fixed length = 7, one stop bit and no parity
+class tx7_stop1_np extends uart_base_seq;
+    `uvm_object_utils(tx7_stop1_np)
+
+    base_seq_item seq;
+    function new(input string name="tx7_stop1_np");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+      assert(seq.randomize() with {data_bit_num == 2'b10; stop_bit_num == 1'b0; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+
+//Transmit fixed length = 7, one stop bit and odd parity
+class tx7_stop1_odd extends uart_base_seq;
+    `uvm_object_utils(tx7_stop1_odd)
+
+    base_seq_item seq;
+    function new(input string name="tx7_stop1_odd");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b10; stop_bit_num == 1'b0; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b0;});
+        finish_item(seq);
+    endtask
+endclass
+
+//Transmit fixed length = 7, one stop bit and even parity
+class tx7_stop1_even extends uart_base_seq;
+    `uvm_object_utils(tx7_stop1_even)
+
+    base_seq_item seq;
+    function new(input string name="tx7_stop1_even");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b10; stop_bit_num == 1'b0; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+
+//Transmit fixed length = 7, two stop bit and no parity
+class tx7_stop2_np extends uart_base_seq;
+    `uvm_object_utils(tx7_stop2_np)
+
+    base_seq_item seq;
+    function new(input string name="tx7_stop2_np");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b10; stop_bit_num == 1'b1; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+
+
+//Transmit fixed length = 7, two stop bit and odd parity
+class tx7_stop2_odd extends uart_base_seq;
+    `uvm_object_utils(tx7_stop2_odd)
+
+    base_seq_item seq;
+    function new(input string name="tx7_stop2_odd");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b10; stop_bit_num == 1'b1; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b0;});
+        finish_item(seq);
+    endtask
+endclass
+
+
+//Transmit fixed length = 7, two stop bit and even parity
+class tx7_stop2_even extends uart_base_seq;
+    `uvm_object_utils(tx7_stop2_even)
+
+    base_seq_item seq;
+    function new(input string name="tx7_stop2_even");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b10; stop_bit_num == 1'b1; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+///////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+* 6 bit data test
+*/
+//Transmit fixed length = 6, one stop bit and no parity
+class tx6_stop1_np extends uart_base_seq;
+    `uvm_object_utils(tx6_stop1_np)
+
+    base_seq_item seq;
+    function new(input string name="tx6_stop1_np");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+      assert(seq.randomize() with {data_bit_num == 2'b01; stop_bit_num == 1'b0; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+
+//Transmit fixed length = 6, one stop bit and odd parity
+class tx6_stop1_odd extends uart_base_seq;
+    `uvm_object_utils(tx6_stop1_odd)
+
+    base_seq_item seq;
+    function new(input string name="tx6_stop1_odd");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b01; stop_bit_num == 1'b0; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b0;});
+        finish_item(seq);
+    endtask
+endclass
+
+//Transmit fixed length = 6, one stop bit and even parity
+class tx6_stop1_even extends uart_base_seq;
+    `uvm_object_utils(tx6_stop1_even)
+
+    base_seq_item seq;
+    function new(input string name="tx6_stop1_even");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b01; stop_bit_num == 1'b0; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+
+//Transmit fixed length = 6, two stop bit and no parity
+class tx6_stop2_np extends uart_base_seq;
+    `uvm_object_utils(tx6_stop2_np)
+
+    base_seq_item seq;
+    function new(input string name="tx6_stop2_np");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b01; stop_bit_num == 1'b1; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+
+
+//Transmit fixed length = 6, two stop bit and odd parity
+class tx6_stop2_odd extends uart_base_seq;
+    `uvm_object_utils(tx6_stop2_odd)
+
+    base_seq_item seq;
+    function new(input string name="tx6_stop2_odd");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b01; stop_bit_num == 1'b1; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b0;});
+        finish_item(seq);
+    endtask
+endclass
+
+
+//Transmit fixed length = 6, two stop bit and even parity
+class tx6_stop2_even extends uart_base_seq;
+    `uvm_object_utils(tx6_stop2_even)
+
+    base_seq_item seq;
+    function new(input string name="tx6_stop2_even");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b01; stop_bit_num == 1'b1; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+///////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+* 5 bit data test
+*/
+//Transmit fixed length = 6, one stop bit and no parity
+class tx5_stop1_np extends uart_base_seq;
+    `uvm_object_utils(tx5_stop1_np)
+
+    base_seq_item seq;
+    function new(input string name="tx5_stop1_np");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+      assert(seq.randomize() with {data_bit_num == 2'b00; stop_bit_num == 1'b0; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+
+//Transmit fixed length = 5, one stop bit and odd parity
+class tx5_stop1_odd extends uart_base_seq;
+    `uvm_object_utils(tx5_stop1_odd)
+
+    base_seq_item seq;
+    function new(input string name="tx5_stop1_odd");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b00; stop_bit_num == 1'b0; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b0;});
+        finish_item(seq);
+    endtask
+endclass
+
+//Transmit fixed length = 5, one stop bit and even parity
+class tx5_stop1_even extends uart_base_seq;
+    `uvm_object_utils(tx5_stop1_even)
+
+    base_seq_item seq;
+    function new(input string name="tx5_stop1_even");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b00; stop_bit_num == 1'b0; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+
+//Transmit fixed length = 5, two stop bit and no parity
+class tx5_stop2_np extends uart_base_seq;
+    `uvm_object_utils(tx5_stop2_np)
+
+    base_seq_item seq;
+    function new(input string name="tx5_stop2_np");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b00; stop_bit_num == 1'b1; parity_en == 1'b0; cts_n == 1'b0; start_tx == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+
+
+//Transmit fixed length = 5, two stop bit and odd parity
+class tx5_stop2_odd extends uart_base_seq;
+    `uvm_object_utils(tx5_stop2_odd)
+
+    base_seq_item seq;
+    function new(input string name="tx5_stop2_odd");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b00; stop_bit_num == 1'b1; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b0;});
+        finish_item(seq);
+    endtask
+endclass
+
+
+//Transmit fixed length = 5, two stop bit and even parity
+class tx5_stop2_even extends uart_base_seq;
+    `uvm_object_utils(tx5_stop2_even)
+
+    base_seq_item seq;
+    function new(input string name="tx5_stop2_even");
+        super.new(name);
+    endfunction
+
+    virtual task body();
+        seq = base_seq_item::type_id::create("seq");
+        start_item(seq);
+        assert(seq.randomize() with {data_bit_num == 2'b00; stop_bit_num == 1'b1; parity_en == 1'b1; cts_n == 1'b0; start_tx == 1'b1; parity_type == 1'b1;});
+        finish_item(seq);
+    endtask
+endclass
+///////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
 class tx8_rand extends uart_base_seq;
     `uvm_object_utils(tx8_rand)
 

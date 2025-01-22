@@ -19,21 +19,42 @@ localparam cnt_clk = 50000000/(115200);
   /////////////////////////////////////////
   //  DECLARE COVERGROUP AND COVERPOINT  //
   /////////////////////////////////////////
-  /*
+  
 
+  covergroup tx_data_cvg;
+    cp_tx_data:  coverpoint vif.tx_data;
+  endgroup
+  
+  covergroup tx_config_cvg;
+    // option.per_instance = 1; // required for VCS
+    cp_data_bit_num:	 coverpoint vif.data_bit_num;
+    // cover write request
+    cp_stop_bit_num:	 coverpoint vif.stop_bit_num;
+      //bins valid_wr[] = {1};  // monitor agent0 only active when wr = 1  
+    cp_parity_en: coverpoint vif.parity_en;
 
-    ......
+    cp_parity_type: coverpoint vif.parity_type;
 
+    cp_config_cross: cross cp_data_bit_num, cp_stop_bit_num, cp_parity_en, cp_parity_type;
+  endgroup
 
-  */
+  covergroup handshake_cvg;
+    cp_cts_signal: coverpoint vif.cts_n;
+  endgroup
+  covergroup  transmit_signal_cvg;
+    tx_signal: coverpoint vif.tx;
+    tx_done_signal: coverpoint vif.tx_done;
+  endgroup
+
+  
   // instance port and covergroup in constructor
   function new(input string name="tx_monitor", uvm_component parent=null);
     super.new(name, parent);
     tx_mon_analysis_port = new("tx_mon_analysis_port", this);
-    // data_in_covergroup = new;
-    // wr_covergroup = new;
-    // status_covergroup = new;
-    // cross_covergroup = new;
+    tx_data_cvg = new;
+    tx_config_cvg = new;
+    handshake_cvg = new;
+    transmit_signal_cvg = new;
   endfunction
 
   // config VIF in build phase
@@ -49,18 +70,11 @@ localparam cnt_clk = 50000000/(115200);
         super.run_phase(phase);
         `uvm_info(get_full_name(),{"Starting Run phase for ",get_type_name()}, UVM_LOW)
         forever begin
-        // instance sequence item to hold value get from VIF and send to scoreboard
         base_seq_item mon_seq = base_seq_item::type_id::create("mon_seq");
-	    // get signal from VIF on posedge clk
         @(posedge vif.clk);
-        // put rst_n to base sequence send to scoreboard in order to check 
           mon_seq.rst_n = vif.rst_n;
-        // if no reset and there is write request, get signal and flag from VIF
-       // `uvm_info(get_type_name(),"Start Monitor",UVM_NONE)
     if(vif.rst_n) begin
-       // `uvm_info(get_type_name(),"Start Monitor Non Reset",UVM_NONE)
           @(posedge vif.start_tx);
-         // `uvm_info(get_type_name(),"Start Monitor Non Reset",UVM_NONE)
             mon_seq.cts_n         = vif.cts_n;
             mon_seq.tx_data       = vif.tx_data;
             mon_seq.data_bit_num  = vif.data_bit_num;
@@ -68,16 +82,6 @@ localparam cnt_clk = 50000000/(115200);
             mon_seq.parity_en     = vif.parity_en;
             mon_seq.parity_type   = vif.parity_type;
             mon_seq.tx_frame_data = 'b0;
-           // `uvm_info(get_type_name(),"Get TX Config",UVM_NONE)
-            //@(negedge vif.tx_done);
-          // while(vif.tx_done == 0) begin
-          //     repeat (cnt_clk) @(posedge vif.clk)
-          //     mon_seq.tx_frame_data = {vif.tx, mon_seq.tx_frame_data[10:1]};
-          //     `uvm_info(get_type_name(),$sformatf("TX: %b",vif.tx),UVM_NONE)
-          //   end
-            // @(negedge vif.tx_done);
-           // `uvm_info(get_type_name(),"Start Collecting Data",UVM_NONE)
-            //@(negedge vif.tx_done);
             repeat (cnt_clk + 2) @(posedge vif.clk);
            // `uvm_info(get_type_name(),$sformatf("TX bit start: %b",vif.tx),UVM_NONE) 
             mon_seq.tx_frame_data = {vif.tx, mon_seq.tx_frame_data[11:1]};
@@ -126,6 +130,10 @@ localparam cnt_clk = 50000000/(115200);
               mon_seq.tx_frame_data = {vif.tx, mon_seq.tx_frame_data[11:1]};  
               mon_seq.tx_done = vif.tx_done;
             //  `uvm_info(get_type_name(),$sformatf("TX_MONITOR write item: %s",mon_seq.sprint()),UVM_NONE) 
+              tx_data_cvg.sample();
+              tx_config_cvg.sample();
+              handshake_cvg.sample();
+              transmit_signal_cvg.sample();
               tx_mon_analysis_port.write(mon_seq); 
             end
             else begin
@@ -136,12 +144,20 @@ localparam cnt_clk = 50000000/(115200);
               end  
               mon_seq.tx_done = vif.tx_done;
               //`uvm_info(get_type_name(),$sformatf("TX_MONITOR write item: %s",mon_seq.sprint()),UVM_NONE)
+              tx_data_cvg.sample();
+              tx_config_cvg.sample();
+              handshake_cvg.sample();
+              transmit_signal_cvg.sample();
               tx_mon_analysis_port.write(mon_seq); 
             end
         end
         else begin
         `uvm_info(get_type_name(),"Start Monitor Reset",UVM_NONE)
           @(posedge vif.rst_n);
+          tx_data_cvg.sample();
+          tx_config_cvg.sample();
+          handshake_cvg.sample();
+          transmit_signal_cvg.sample();
           tx_mon_analysis_port.write(mon_seq);
         end  
         end
@@ -253,3 +269,32 @@ class rx_monitor extends uvm_monitor;
 //   endfunction
 
 endclass
+
+// class cover_monitor extends uvm_monitor;
+//   `uvm_component_utils(tx_monitor)
+//     virtual uart_if vif;
+//   covergroup TX_DATA;
+//     cp_tx_data:  coverpoint vif.tx_data;
+//   endgroup
+  
+//   covergroup TX_CONFIG;
+//     // option.per_instance = 1; // required for VCS
+//     cp_data_bit_num:	 coverpoint vif.data_bit_num;
+//     // cover write request
+//     cp_stop_bit_num:	 coverpoint vif.stop_bit_num;
+//       //bins valid_wr[] = {1};  // monitor agent0 only active when wr = 1  
+//     cp_parity_en: coverpoint vif.parity_en;
+
+//     cp_parity_type: coverpoint vif.parity_type;
+
+//     cp_config_cross: cross cp_data_bit_num, cp_stop_bit_num, cp_parity_en, cp_parity_type;
+//   endgroup
+
+//   covergroup HANDSHAKE;
+//     cp_cts_signal: coverpoint vif.cts;
+//   endgroup
+//   covergroup  TRANSMIT_SIGNAL;
+//     tx_signal: coverpoint vif.tx
+//     tx_done_signal: coverpoint vif.tx_done
+//   endgroup
+// endclass

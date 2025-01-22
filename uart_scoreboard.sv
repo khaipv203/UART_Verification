@@ -30,7 +30,7 @@ class uart_scoreboard extends uvm_scoreboard;
   virtual function void write_tx_mon(input base_seq_item tx_seq);
 
     logic[11:0] golden_data_frame; 
-    `uvm_info(get_type_name(),"Receive Seq From Monitor Write to Scoreboard",UVM_MEDIUM)
+    //`uvm_info(get_type_name(),"Receive Seq From Monitor Write to Scoreboard",UVM_MEDIUM)
     // `uvm_info(get_type_name(),$sformatf("Receive write seq: %s",tx_seq.sprint()),UVM_MEDIUM)
     if(tx_seq.rst_n) begin
       golden_data_frame = 'b0;
@@ -109,11 +109,13 @@ class uart_scoreboard extends uvm_scoreboard;
 
   task check_for_result(input base_seq_item tx_seq_check, input logic [11:0] golden_data, input logic [11:0] DUT_data);
     if(tx_seq_check.data_bit_num == 2'b11 && tx_seq_check.parity_en == 1'b1 && tx_seq_check.stop_bit_num == 1'b1) begin
-      if(golden_data == DUT_data)
-   `uvm_info(get_type_name(),$sformatf("TX SEQUENCE PASS: GOLDEN=%0B, DUT=%0B", golden_data, DUT_data),UVM_LOW)
-      else
+      if(golden_data != DUT_data) begin
+    `uvm_info(get_type_name(),$sformatf("Check 8 bit, 2 bit_stop, parity %s", tx_seq_check.parity_type?"Even":"Odd"),UVM_LOW)
+    `uvm_error(get_type_name(),$sformatf("TX_ERROR: write item: %s",tx_seq_check.sprint()))
+      end
+     // else
     // `uvm_error(get_type_name(),$sformatf("TX ERROR: GOLDEN=%0B, DUT=%0B", golden_data, DUT_data))
-      `uvm_error(get_type_name(),$sformatf("TX_ERROR GOLDEN=%0B, DUT=%0B, write item: %s", golden_data, DUT_data ,tx_seq_check.sprint()))
+     
     end
     else if //Check for frame 11 bit
     (
@@ -121,10 +123,17 @@ class uart_scoreboard extends uvm_scoreboard;
       (tx_seq_check.data_bit_num == 2'b11 && tx_seq_check.parity_en == 1'b0 && tx_seq_check.stop_bit_num == 1'b1) || 
       (tx_seq_check.data_bit_num == 2'b10 && tx_seq_check.parity_en == 1'b1 && tx_seq_check.stop_bit_num == 1'b1)
     ) begin
-      if(golden_data == DUT_data[11:1])
-    `uvm_info(get_type_name(),$sformatf("TX SEQUENCE PASS: GOLDEN=%0B, DUT=%0B", golden_data[10:0], DUT_data[11:1]),UVM_LOW)
-      else
-    `uvm_error(get_type_name(),$sformatf("TX_ERROR, write item: %s", golden_data[10:0], DUT_data[11:1],tx_seq_check.sprint()))
+      if(golden_data != DUT_data[11:1]) begin
+        if(tx_seq_check.data_bit_num == 2'b11 && tx_seq_check.parity_en == 1'b1 && tx_seq_check.stop_bit_num == 1'b0) 
+         `uvm_info(get_type_name(),$sformatf("Check 8 bit, 1 bit_stop, parity %s", tx_seq_check.parity_type?"Even":"Odd"),UVM_LOW)
+        else if(tx_seq_check.data_bit_num == 2'b11 && tx_seq_check.parity_en == 1'b0 && tx_seq_check.stop_bit_num == 1'b1)
+          `uvm_info(get_type_name(),"Check 8 bit, 2 bit_stop, no parity ",UVM_LOW)
+        else
+          `uvm_info(get_type_name(),$sformatf("Check 7 bit, 2 bit_stop, parity %s", tx_seq_check.parity_type?"Even":"Odd"),UVM_LOW)
+        `uvm_error(get_type_name(),$sformatf("TX_ERROR: write item: %s",tx_seq_check.sprint()))
+      end
+      //else
+
     end
     else if //Check for 10 bit
     (
@@ -133,10 +142,18 @@ class uart_scoreboard extends uvm_scoreboard;
     (tx_seq_check.data_bit_num == 2'b10 && tx_seq_check.parity_en == 1'b0 && tx_seq_check.stop_bit_num == 1'b1) ||
     (tx_seq_check.data_bit_num == 2'b01 && tx_seq_check.parity_en == 1'b1 && tx_seq_check.stop_bit_num == 1'b1) 
     ) begin
-      if(golden_data == DUT_data[11:2])
-    `uvm_info(get_type_name(),$sformatf("TX SEQUENCE PASS: GOLDEN=%0B, DUT=%0B", golden_data[9:0], DUT_data[11:2]),UVM_LOW)
-      else
-    `uvm_error(get_type_name(),$sformatf("TX_ERROR GOLDEN=%0B, DUT=%0B, write item: %s", golden_data[9:0], DUT_data[11:2],tx_seq_check.sprint()))
+      if(golden_data != DUT_data[11:2]) begin
+        if(tx_seq_check.data_bit_num == 2'b11 && tx_seq_check.parity_en == 1'b0 && tx_seq_check.stop_bit_num == 1'b0) 
+         `uvm_info(get_type_name(),"Check 8 bit, 1 bit_stop, no parity ", UVM_LOW)
+        else if(tx_seq_check.data_bit_num == 2'b10 && tx_seq_check.parity_en == 1'b1 && tx_seq_check.stop_bit_num == 1'b0)
+          `uvm_info(get_type_name(),$sformatf("Check 7 bit, 1 bit_stop, parity %s", tx_seq_check.parity_type?"Even":"Odd"),UVM_LOW)
+        else if(tx_seq_check.data_bit_num == 2'b10 && tx_seq_check.parity_en == 1'b0 && tx_seq_check.stop_bit_num == 1'b1)
+          `uvm_info(get_type_name(),"Check 7 bit, 2 bit_stop, no parity",UVM_LOW)
+        else
+          `uvm_info(get_type_name(),$sformatf("Check 6 bit, 2 bit_stop, parity %s", tx_seq_check.parity_type?"Even":"Odd"),UVM_LOW)
+      `uvm_error(get_type_name(),$sformatf("TX_ERROR: write item: %s",tx_seq_check.sprint()))
+      //else
+      end
     end
      else if //Check for 9 bit
     (
@@ -145,10 +162,18 @@ class uart_scoreboard extends uvm_scoreboard;
     (tx_seq_check.data_bit_num == 2'b01 && tx_seq_check.parity_en == 1'b0 && tx_seq_check.stop_bit_num == 1'b1) ||
     (tx_seq_check.data_bit_num == 2'b00 && tx_seq_check.parity_en == 1'b1 && tx_seq_check.stop_bit_num == 1'b1) 
     ) begin
-      if(golden_data == DUT_data[11:3])
-    `uvm_info(get_type_name(),$sformatf("TX SEQUENCE PASS"),UVM_LOW)
-      else
-    `uvm_error(get_type_name(),$sformatf("TX_ERROR GOLDEN=%0B, DUT=%0B, write item: %s", golden_data[8:0], DUT_data[11:3],tx_seq_check.sprint()))
+        if(golden_data != DUT_data[11:3]) begin
+        if(tx_seq_check.data_bit_num == 2'b10 && tx_seq_check.parity_en == 1'b0 && tx_seq_check.stop_bit_num == 1'b0) 
+         `uvm_info(get_type_name(),"Check 7 bit, 1 bit_stop, no parity ", UVM_LOW)
+        else if(tx_seq_check.data_bit_num == 2'b01 && tx_seq_check.parity_en == 1'b1 && tx_seq_check.stop_bit_num == 1'b0)
+          `uvm_info(get_type_name(),$sformatf("Check 6 bit, 1 bit_stop, parity %s", tx_seq_check.parity_type?"Even":"Odd"),UVM_LOW)
+        else if(tx_seq_check.data_bit_num == 2'b01 && tx_seq_check.parity_en == 1'b0 && tx_seq_check.stop_bit_num == 1'b1)
+          `uvm_info(get_type_name(),"Check 6 bit, 2 bit_stop, no parity",UVM_LOW)
+        else
+          `uvm_info(get_type_name(),$sformatf("Check 5 bit, 2 bit_stop, parity %s", tx_seq_check.parity_type?"Even":"Odd"),UVM_LOW)
+      `uvm_error(get_type_name(),$sformatf("TX_ERROR: write item: %s",tx_seq_check.sprint()))
+      //else
+      end
     end
     else if //Check for frame 8 bit
     (
@@ -156,16 +181,23 @@ class uart_scoreboard extends uvm_scoreboard;
       (tx_seq_check.data_bit_num == 2'b00 && tx_seq_check.parity_en == 1'b1 && tx_seq_check.stop_bit_num == 1'b0) || 
       (tx_seq_check.data_bit_num == 2'b00 && tx_seq_check.parity_en == 1'b0 && tx_seq_check.stop_bit_num == 1'b1)
     ) begin
-      if(golden_data == DUT_data[11:4])
-   `uvm_info(get_type_name(),$sformatf("TX SEQUENCE PASS"),UVM_LOW)
-      else
-    `uvm_error(get_type_name(),$sformatf("TX_ERROR GOLDEN=%0B, DUT=%0B, write item: %s", golden_data[7:0], DUT_data[11:4],tx_seq_check.sprint()))
+      if(golden_data != DUT_data[11:4]) begin
+      if(tx_seq_check.data_bit_num == 2'b00 && tx_seq_check.parity_en == 1'b1 && tx_seq_check.stop_bit_num == 1'b0) 
+         `uvm_info(get_type_name(),$sformatf("Check 5 bit, 1 bit_stop, parity %s", tx_seq_check.parity_type?"Even":"Odd"),UVM_LOW)
+        else if(tx_seq_check.data_bit_num == 2'b01 && tx_seq_check.parity_en == 1'b0 && tx_seq_check.stop_bit_num == 1'b0)
+          `uvm_info(get_type_name(),"Check 6 bit, 1 bit_stop, no parity ",UVM_LOW)
+        else
+          `uvm_info(get_type_name(),"Check 5 bit, 2 bit_stop, no parity ",UVM_LOW)
+    `uvm_error(get_type_name(),$sformatf("TX_ERROR: write item: %s",tx_seq_check.sprint()))
+      //else
+      end
     end
     else begin
-      if(golden_data == DUT_data[11:5])
-    `uvm_info(get_type_name(),$sformatf("TX SEQUENCE PASS"),UVM_LOW)
-      else
-    `uvm_error(get_type_name(),$sformatf("TX_ERROR GOLDEN=%0B, DUT=%0B, write item: %s", golden_data[6:0], DUT_data[11:5],tx_seq_check.sprint()))
+      if(golden_data != DUT_data[11:5]) begin
+          `uvm_info(get_type_name(),"Check 5 bit, 2 bit_stop, no parity ",UVM_LOW)
+      `uvm_error(get_type_name(),$sformatf("TX_ERROR: write item: %s",tx_seq_check.sprint()))
+    // else
+      end
     end
   endtask 
   // overwrite write function with tag monitor read

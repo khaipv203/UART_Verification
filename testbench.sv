@@ -15,7 +15,7 @@ import uvm_pkg::*;
     `include "uart_env.sv"
     `include "uart_test.sv"
     `include "uart_interface.sv"
-	  // `include "/home/khai/I2C_UVM/hdl/uart.sv" 
+	  `include "/home/khai/I2C_UVM/hdl/uart.sv" 
 module testbench;
   // declare clk signal
   bit clk;
